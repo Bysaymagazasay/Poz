@@ -1,0 +1,24 @@
+/* BYSAY arayüz son düzenlemeleri – 2026.07.12 */
+.brand-mark.brand-logo{width:156px!important;height:66px!important;overflow:visible!important}
+.brand-logo img{width:156px!important;height:66px!important;opacity:1!important;filter:none!important;mix-blend-mode:normal!important;object-fit:contain!important}
+
+.drop-icon{width:54px!important;height:54px!important;min-width:54px!important;border-radius:16px!important;background:linear-gradient(145deg,#e6fbff,#d8f4fb)!important;color:#087f9a!important;display:grid!important;place-items:center!important;border:1px solid #bfe8f1!important;box-shadow:0 8px 22px rgba(8,127,154,.13)!important}
+.drop-icon svg{width:25px;height:25px;display:block;stroke:currentColor}
+.drop-icon:hover,.drop-icon:focus-visible{background:linear-gradient(145deg,#d9f8fd,#c9eef6)!important;color:#066b83!important;transform:translateY(-1px)!important}
+.drop-title{font-size:12.5px!important;font-weight:650!important;color:#40516a!important;letter-spacing:.005em}
+
+#savedInstitutionBooksPanel,.saved-books-panel,.saved-books-status,.installed-books-panel,.book-list-title,#pozBookList{display:none!important}
+.book-modal .book-upload-box{margin-top:10px!important}
+.program-book-catalog-head>div strong{font-size:17px!important}
+.program-book-catalog-head>div small{font-size:11px!important}
+.program-book-catalog-grid{align-items:stretch}
+.catalog-book-card-shell{display:flex;align-items:stretch;gap:8px;min-width:0}
+.catalog-book-card-shell .catalog-book-card{flex:1;min-width:0}
+.catalog-book-delete{width:42px;flex:0 0 42px;border:1px solid #ead4d7;background:#fff7f8;color:#b4232b;border-radius:14px;display:grid;place-items:center;cursor:pointer;transition:.18s ease;box-shadow:0 5px 14px rgba(90,20,28,.04)}
+.catalog-book-delete:hover{background:#ffecef;border-color:#e6aeb5;transform:translateY(-1px);box-shadow:0 9px 20px rgba(120,25,36,.10)}
+.catalog-book-delete:focus-visible{outline:3px solid rgba(180,35,43,.15);outline-offset:2px}
+.catalog-book-delete svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.catalog-book-logo.logo-csidb{background:linear-gradient(145deg,#0f766e,#115e59)!important;color:#fff!important}
+
+#exportBtn{min-width:108px}
+@media(max-width:700px){.catalog-book-delete{width:40px;flex-basis:40px}.brand-mark.brand-logo,.brand-logo img{width:132px!important}}
