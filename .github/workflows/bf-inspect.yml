@@ -18,7 +18,6 @@ jobs:
           name: birimfiyat-inspect
           path: |
             inspect.log
-            inspect.json
+            query_results.json
+            query_*.html
             home.html
-            inline_*.js
-            script_*.js
