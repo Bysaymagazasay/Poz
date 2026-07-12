@@ -12,14 +12,14 @@
 
   const cleanCode = value => String(value ?? '')
     .replace(/[\u00ad\u200b-\u200d\ufeff]/g, '')
-    .trim()
     .toUpperCase()
     .replace(/[‐‑‒–—−]/g, '-')
     .replace(/\s+/g, '')
-    .replace(/^[,;:()\[\]]+|[,;:()\[\]]+$/g, '');
+    .replace(/[^A-ZÇĞİÖŞÜ0-9._\/-]/g, '')
+    .replace(/^[._\/-]+|[._\/-]+$/g, '');
 
   const isCode = code => {
-    if (!code || code.length < 3 || code.length > 80 || !/[0-9]/.test(code)) return false;
+    if (!code || code.length < 3 || code.length > 90 || !/[0-9]/.test(code)) return false;
     if (/^\d+(?:\.\d+){2,}(?:[-/][A-Z0-9]+)?$/i.test(code)) return true;
     return /^[A-ZÇĞİÖŞÜ0-9]+(?:[.\/_-]+[A-ZÇĞİÖŞÜ0-9]+)+$/i.test(code);
   };
@@ -29,32 +29,9 @@
     return /^[-+]?\d{1,3}(?:\.\d{3})*(?:,\d+)?$/.test(s) || /^[-+]?\d+(?:[.,]\d+)?$/.test(s);
   };
 
-  const decodeXml = value => String(value ?? '')
-    .replace(/&lt;/g, '<').replace(/&gt;/g, '>')
-    .replace(/&quot;/g, '"').replace(/&apos;/g, "'")
-    .replace(/&amp;/g, '&')
-    .replace(/&#(\d+);/g, (_, n) => String.fromCodePoint(Number(n)))
-    .replace(/&#x([0-9a-f]+);/gi, (_, n) => String.fromCodePoint(parseInt(n, 16)));
-
-  const getElements = (xml, localName) => {
-    const expression = `<(?:[A-Za-z0-9_]+:)?${localName}\\b[^>]*>[\\s\\S]*?<\\/(?:[A-Za-z0-9_]+:)?${localName}>`;
-    return String(xml ?? '').match(new RegExp(expression, 'gi')) || [];
-  };
-
-  const getXmlText = fragment => {
-    const prepared = String(fragment ?? '')
-      .replace(/<(?:[A-Za-z0-9_]+:)?tab\b[^>]*\/?\s*>/gi, '\t')
-      .replace(/<(?:[A-Za-z0-9_]+:)?br\b[^>]*\/?\s*>/gi, ' ')
-      .replace(/<\/(?:[A-Za-z0-9_]+:)?p\s*>/gi, ' ');
-
-    const values = [];
-    const expression = /<(?:[A-Za-z0-9_]+:)?(?:t|instrText)\b[^>]*>([\s\S]*?)<\/(?:[A-Za-z0-9_]+:)?(?:t|instrText)>/gi;
-    let match;
-    while ((match = expression.exec(prepared))) {
-      values.push(decodeXml(match[1].replace(/<[^>]+>/g, '')));
-    }
-
-    return values.join('').replace(/\u00a0/g, ' ').replace(/\s+/g, ' ').trim();
+  const textFromCell = cell => {
+    const texts = Array.from(cell.getElementsByTagNameNS('*', 't'));
+    return texts.map(node => node.textContent || '').join('').replace(/\u00a0/g, ' ').trim();
   };
 
   const showToast = (message, duration = 5000) => {
@@ -73,10 +50,24 @@
     loading.setAttribute('aria-hidden', show ? 'false' : 'true');
   };
 
-  function parseRowsFromXml(xmlText) {
-    return getElements(xmlText, 'tr').map(rowXml =>
-      getElements(rowXml, 'tc').map(getXmlText)
-    ).filter(row => row.length > 0);
+  function parseGrid(xmlText) {
+    const xml = new DOMParser().parseFromString(xmlText, 'application/xml');
+    const parserError = xml.getElementsByTagName('parsererror')[0];
+    if (parserError) throw new Error('Word XML içeriği ayrıştırılamadı.');
+
+    const tables = Array.from(xml.getElementsByTagNameNS('*', 'tbl'));
+    const grids = [];
+
+    for (const table of tables) {
+      const rows = Array.from(table.getElementsByTagNameNS('*', 'tr'));
+      const grid = rows.map(row => {
+        const cells = Array.from(row.children).filter(node => node.localName === 'tc');
+        return cells.map(textFromCell);
+      }).filter(row => row.length);
+      if (grid.length) grids.push(grid);
+    }
+
+    return grids;
   }
 
   function detectColumns(grid) {
@@ -87,20 +78,41 @@
     for (let r = 0; r < Math.min(grid.length, 80); r++) {
       for (let c = 0; c < grid[r].length; c++) {
         const header = normalizeHeader(grid[r][c]);
-        if (codeCol < 0 && [
-          'iskalemino', 'iskaleminumarasi', 'iskalemnumarasi',
-          'pozno', 'poznumarasi', 'kalemno', 'poz'
-        ].some(key => header === key || header.includes(key))) {
+        if (codeCol < 0 && ['iskalemino','iskaleminumarasi','iskalemnumarasi','pozno','poznumarasi','kalemno','poz']
+          .some(key => header === key || header.includes(key))) {
           headerRow = r;
           codeCol = c;
         }
-        if (qtyCol < 0 && [
-          'miktar', 'miktari', 'adet', 'adedi', 'metraj', 'quantity', 'qty'
-        ].some(key => header === key || header.includes(key))) {
+        if (qtyCol < 0 && ['miktar','miktari','adet','adedi','metraj','quantity','qty']
+          .some(key => header === key || header.includes(key))) {
           qtyCol = c;
         }
       }
-      if (codeCol >= 0 && qtyCol >= 0) break;
+    }
+
+    if (codeCol < 0) {
+      const scores = [];
+      const maxCols = Math.max(...grid.map(row => row.length), 0);
+      for (let c = 0; c < maxCols; c++) {
+        let score = 0;
+        for (const row of grid.slice(0, 200)) if (isCode(cleanCode(row[c]))) score++;
+        scores.push(score);
+      }
+      const best = Math.max(...scores, 0);
+      if (best > 0) codeCol = scores.indexOf(best);
+    }
+
+    if (qtyCol < 0 && codeCol >= 0) {
+      const scores = [];
+      const maxCols = Math.max(...grid.map(row => row.length), 0);
+      for (let c = 0; c < maxCols; c++) {
+        if (c === codeCol) { scores.push(-1); continue; }
+        let score = 0;
+        for (const row of grid.slice(0, 200)) if (isQuantity(row[c])) score++;
+        scores.push(score);
+      }
+      const best = Math.max(...scores, 0);
+      if (best > 0) qtyCol = scores.indexOf(best);
     }
 
     return {headerRow, codeCol, qtyCol};
@@ -113,24 +125,24 @@
 
     for (let r = startRow; r < grid.length; r++) {
       const row = grid[r];
-      let codeColumn = detected.codeCol;
-      let code = codeColumn >= 0 ? cleanCode(row[codeColumn]) : '';
+      let code = detected.codeCol >= 0 ? cleanCode(row[detected.codeCol]) : '';
 
       if (!isCode(code)) {
-        codeColumn = row.findIndex((value, index) => index > 0 && isCode(cleanCode(value)));
-        code = codeColumn >= 0 ? cleanCode(row[codeColumn]) : '';
+        for (let c = 1; c < row.length; c++) {
+          const candidate = cleanCode(row[c]);
+          if (isCode(candidate)) { code = candidate; break; }
+        }
       }
-
       if (!isCode(code)) continue;
 
       let quantity = detected.qtyCol >= 0 ? String(row[detected.qtyCol] ?? '').trim() : '';
       if (!isQuantity(quantity)) {
         quantity = '';
-        for (let c = Math.max(0, codeColumn + 1); c < row.length; c++) {
+        for (let c = 0; c < row.length; c++) {
+          if (c === detected.codeCol) continue;
           const candidate = String(row[c] ?? '').trim();
-          if (isQuantity(candidate)) {
+          if (isQuantity(candidate) && !/^\d+$/.test(candidate) || (isQuantity(candidate) && Number(candidate.replace(',', '.')) > 0)) {
             quantity = candidate;
-            break;
           }
         }
       }
@@ -142,19 +154,22 @@
   }
 
   async function parseDocx(file) {
-    if (!window.JSZip) {
-      throw new Error('Word okuyucu yüklenemedi. İnternet bağlantınızı kontrol edip sayfayı yenileyin.');
-    }
-
+    if (!window.JSZip) throw new Error('Word okuyucu yüklenemedi. Sayfayı yenileyin.');
     const zip = await JSZip.loadAsync(await file.arrayBuffer());
     const entry = zip.file('word/document.xml');
     if (!entry) throw new Error('Word belgesinin ana içeriği okunamadı.');
 
     const xmlText = await entry.async('string');
-    const grid = parseRowsFromXml(xmlText);
-    if (!grid.length) throw new Error('Word belgesindeki tablo satırları okunamadı.');
+    const grids = parseGrid(xmlText);
+    const allRows = grids.flatMap(extractRows);
 
-    return extractRows(grid);
+    const unique = [];
+    const seen = new Set();
+    for (const row of allRows) {
+      const key = `${row.code}|${row.quantity}`;
+      if (!seen.has(key)) { seen.add(key); unique.push(row); }
+    }
+    return unique;
   }
 
   input.addEventListener('change', async event => {
@@ -167,9 +182,7 @@
 
     try {
       const rows = await parseDocx(file);
-      if (!rows.length) {
-        throw new Error('Word dosyasında İş Kalemi No / Poz No sütunundan aktarılabilir kod bulunamadı.');
-      }
+      if (!rows.length) throw new Error('Word dosyasındaki İş Kalemi No değerleri okunamadı.');
 
       const bulk = document.getElementById('bulkInput');
       const importButton = document.getElementById('importPasteBtn');
