@@ -1,7 +1,9 @@
 (() => {
   'use strict';
 
-  const VERSION = '20260712-20';
+  const VERSION = '20260712-21';
+  const REPO_CDN = 'https://cdn.jsdelivr.net/gh/Bysaymagazasay/Poz@main/';
+  const REPO_RAW = 'https://raw.githubusercontent.com/Bysaymagazasay/Poz/main/';
 
   const loadScript = source => new Promise((resolve, reject) => {
     const script = document.createElement('script');
@@ -10,6 +12,46 @@
     script.onerror = () => reject(new Error(`Program dosyası yüklenemedi: ${source}`));
     document.body.appendChild(script);
   });
+
+  const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
+
+  const executeScriptText = (code, source) => {
+    if (!String(code || '').trim()) throw new Error(`Boş program dosyası: ${source}`);
+    (0, eval)(`${code}\n//# sourceURL=${source.replace(/\s/g, '_')}`);
+  };
+
+  const fetchScriptText = async source => {
+    const response = await fetch(source, {cache: 'no-store', mode: 'cors'});
+    if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
+    const code = await response.text();
+    if (!code.includes('BYSAY_INSTITUTIONAL_BOOKS_B64')) {
+      throw new Error('Beklenen poz kitabı veri içeriği bulunamadı.');
+    }
+    executeScriptText(code, source);
+  };
+
+  const loadInstitutionalPart = async path => {
+    const stamp = `${VERSION}-${Date.now()}`;
+    const sources = [
+      `${path}?v=${stamp}`,
+      `${REPO_CDN}${path}?v=${stamp}`,
+      `${REPO_RAW}${path}?v=${stamp}`
+    ];
+    const errors = [];
+
+    for (const source of sources) {
+      for (let attempt = 1; attempt <= 2; attempt++) {
+        try {
+          await fetchScriptText(source);
+          return;
+        } catch (error) {
+          errors.push(`${source} (${error?.message || error})`);
+          if (attempt < 2) await wait(350 * attempt);
+        }
+      }
+    }
+    throw new Error(`Poz kitabı veri parçası yüklenemedi: ${path}. ${errors.at(-1) || ''}`);
+  };
 
   const normalizePoz = value => String(value ?? '').trim().toUpperCase().replace(/\s+/g, '').replace(/[–—−]/g, '-');
 
@@ -148,7 +190,7 @@
 
     for (let part = 1; part <= 16; part++) {
       const number = String(part).padStart(2, '0');
-      await loadScript(`data/institutional-books-${number}.js?v=${VERSION}`);
+      await loadInstitutionalPart(`data/institutional-books-${number}.js`);
     }
     if (typeof DecompressionStream !== 'function' && !window.pako) {
       await loadScript('https://cdn.jsdelivr.net/npm/pako@2.1.0/dist/pako.min.js');
