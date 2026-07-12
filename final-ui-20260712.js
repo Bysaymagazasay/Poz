@@ -9,6 +9,8 @@
     .replace(/[^a-z0-9]+/g, '');
 
   const disciplineOf = (code, record = null) => {
+    const explicit = String(record?.disiplin || '').trim().toLocaleUpperCase('tr-TR');
+    if (['İNŞ','MEK','ELK','ÖZL'].includes(explicit)) return explicit;
     const key = normalizePoz(code).replace(/-(D|M)$/i, '');
     const hint = normalizeText(`${record?.kitap || ''} ${record?.kaynak || ''} ${record?.tanim || ''}`);
     if (/elektrik|elektronik|kuvvetliakim|zayifakim|elk/.test(hint) || /^(35|36)\./.test(key)) return 'ELK';
@@ -41,9 +43,11 @@
 
     if (!source || /montajfiyati|demontajfiyati|tablo\d+|json/.test(norm)) return 'ÇŞİDB Temmuz 2026';
     if (/cev|sehircilik|csb|csidb/.test(norm)) return withDate('ÇŞİDB') || 'ÇŞİDB Temmuz 2026';
+    if (/altyapiyatirimlari|aygm/.test(norm)) return withDate('AYGM');
     if (/karayollari|kgm/.test(norm)) return withDate('KGM');
     if (/devletsuisleri|dsi/.test(norm)) return withDate('DSİ');
     if (/illerbankasi|ilbank/.test(norm)) return withDate('İLBANK');
+    if (/ptt|postatelgrafteskilat/.test(norm)) return withDate('PTT');
     if (/vakiflar|vgm/.test(norm)) return withDate('VGM');
     if (/millisaraylar/.test(norm)) return withDate('Milli Saraylar');
     if (/kultur|turizm|ktb/.test(norm)) return withDate('KTB');
@@ -104,9 +108,9 @@
 
   const updateStaticText = () => {
     const source = document.getElementById('sourceName');
-    if (source) source.textContent = 'Çevre, Şehircilik Bakanlığı • Temmuz 2026 birim fiyatları';
+    if (source) source.textContent = 'ÇŞİDB, AYGM, DSİ, KGM, PTT ve İLBANK • 2026 birim fiyatları';
     const subtitle = document.querySelector('.brand-sub');
-    if (subtitle) subtitle.textContent = 'Çevre, Şehircilik Bakanlığı • Temmuz 2026';
+    if (subtitle) subtitle.textContent = 'ÇŞİDB, AYGM, DSİ, KGM, PTT ve İLBANK • 2026';
   };
 
   const downloadCleanCsv = event => {
