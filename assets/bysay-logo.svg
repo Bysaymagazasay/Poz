@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="180" viewBox="0 0 720 180" role="img" aria-label="BySay">
+  <g fill="none" stroke="#ffffff" stroke-width="5">
+    <circle cx="88" cy="90" r="67"/>
+    <path d="M35 56a67 67 0 0 1 106 0M35 124a67 67 0 0 0 106 0" opacity=".9"/>
+  </g>
+  <text x="42" y="117" fill="#ffffff" font-family="Georgia, 'Times New Roman', serif" font-size="79" font-style="italic">BS</text>
+  <text x="176" y="128" fill="#ffffff" font-family="Georgia, 'Times New Roman', serif" font-size="116">BySay</text>
+</svg>
