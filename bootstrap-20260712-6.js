@@ -1,7 +1,7 @@
 (() => {
   'use strict';
 
-  const VERSION = '20260712-17';
+  const VERSION = '20260712-19';
 
   const loadScript = source => new Promise((resolve, reject) => {
     const script = document.createElement('script');
@@ -103,6 +103,11 @@
   };
 
   const loadInstitutionalData = async () => {
+    // Eski veya yarım kalmış veri parçalarının yeni yüklemeye karışmasını engelle.
+    window.BYSAY_INSTITUTIONAL_BOOKS_B64 = '';
+    window.BYSAY_INSTITUTIONAL_BOOKS_LOADED = false;
+    window.BYSAY_INSTITUTIONAL_BOOKS_META = null;
+
     for (let part = 1; part <= 16; part++) {
       const number = String(part).padStart(2, '0');
       await loadScript(`data/institutional-books-${number}.js?v=${VERSION}`);
@@ -111,7 +116,11 @@
     if (typeof window.BYSAY_LOAD_INSTITUTIONAL_BOOKS !== 'function') {
       throw new Error('Kurum poz kitapları yükleyicisi bulunamadı.');
     }
-    return await window.BYSAY_LOAD_INSTITUTIONAL_BOOKS();
+    const result = await window.BYSAY_LOAD_INSTITUTIONAL_BOOKS();
+    if (!result || result.bookCount < 5 || result.recordCount < 1000) {
+      throw new Error(`Kurum poz kitapları eksik yüklendi (${result?.bookCount || 0} kitap, ${result?.recordCount || 0} poz).`);
+    }
+    return result;
   };
 
   (async () => {
