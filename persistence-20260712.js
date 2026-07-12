@@ -54,6 +54,14 @@
     }
   };
 
+  const loadStageUi = () => {
+    if (document.querySelector('script[data-bysay-stage-ui]')) return;
+    const script = document.createElement('script');
+    script.dataset.bysayStageUi = '1';
+    script.src = `stage-ui-20260712.js?v=20260712-22-${Date.now()}`;
+    document.body.appendChild(script);
+  };
+
   const waitForProgram = (attempt = 0) => {
     const saveButton = document.getElementById('saveBtn');
     const importButton = document.getElementById('importPasteBtn');
@@ -62,10 +70,12 @@
     if (saveButton && importButton && resultBody && resultBody.querySelector('tr')) {
       saveButton.addEventListener('click', save);
       restore();
+      loadStageUi();
       return;
     }
 
     if (attempt < 100) setTimeout(() => waitForProgram(attempt + 1), 100);
+    else loadStageUi();
   };
 
   if (document.readyState === 'loading') {
