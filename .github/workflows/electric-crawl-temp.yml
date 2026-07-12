@@ -5,6 +5,9 @@ on:
   workflow_dispatch:
 permissions:
   contents: write
+concurrency:
+  group: electric-crawl-temp
+  cancel-in-progress: true
 jobs:
   crawl:
     runs-on: ubuntu-latest
