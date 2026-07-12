@@ -129,15 +129,16 @@
       </section>
     </main>
 
-    <footer>© 2026 BYSAY • Tarayıcıda çevrimdışı çalışır. Seçtiğiniz dosyalar bilgisayarınızdan dışarı gönderilmez.</footer>
+    <footer>© 2026 BYSAY • Tarayıcıda çalışır. Seçtiğiniz dosyalar bilgisayarınızdan dışarı gönderilmez.</footer>
   </div>
 
   <div class="loading-overlay" id="loadingOverlay" aria-hidden="true">
     <div class="loader"></div><strong>Dosya inceleniyor…</strong><span>Poz numaraları ve miktarlar tespit ediliyor.</span>
   </div>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
-  <script src="vendor/xlsx.full.min.js"></script>
-  <script src="vendor/jszip.min.js"></script>
+  <!-- Dosya okuyucular güvenilir CDN üzerinden yüklenir. Belge içeriği tarayıcıdan dışarı gönderilmez. -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
   <script src="data.js"></script>
   <script src="app.js"></script>
 </body>
