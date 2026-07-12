@@ -1,7 +1,7 @@
 (() => {
   'use strict';
 
-  const VERSION = '20260712-19';
+  const VERSION = '20260712-20';
 
   const loadScript = source => new Promise((resolve, reject) => {
     const script = document.createElement('script');
@@ -11,7 +11,7 @@
     document.body.appendChild(script);
   });
 
-  const normalizePoz = value => String(value ?? '').trim().toUpperCase().replace(/\s+/g, '').replace(/[–—]/g, '-');
+  const normalizePoz = value => String(value ?? '').trim().toUpperCase().replace(/\s+/g, '').replace(/[–—−]/g, '-');
 
   const parseNumber = value => {
     if (typeof value === 'number') return Number.isFinite(value) ? value : NaN;
@@ -102,15 +102,56 @@
     };
   };
 
+  const addPozAliases = () => {
+    const source = Array.isArray(window.POZ_DATA) ? window.POZ_DATA : [];
+    const exact = new Map(source.map(item => [normalizePoz(item.poz), item]));
+    const aliases = [];
+
+    const variantsOf = value => {
+      const original = normalizePoz(value);
+      const suffix = original.match(/-(D|M)$/i)?.[0] || '';
+      const base = suffix ? original.slice(0, -suffix.length) : original;
+      const variants = new Set();
+      const dotted = base.replace(/[\/_-]+/g, '.').replace(/\.{2,}/g, '.').replace(/^\.|\.$/g, '');
+      const slashed = base.replace(/[._-]+/g, '/').replace(/\/{2,}/g, '/').replace(/^\/|\/$/g, '');
+      const compact = base.replace(/[^A-ZÇĞİÖŞÜ0-9]/g, '');
+      [dotted, slashed, compact].forEach(item => item && variants.add(item + suffix));
+      const withoutPrefix = base.replace(/^(AYGM|DSI|DSİ|KGM|PTT|ILBANK|İLBANK|TEDAS|TEDAŞ|TEIAS|TEİAŞ|EUAS|EÜAŞ|BOTAS|BOTAŞ|TCDD)[.\/_-]+/i, '');
+      if (withoutPrefix !== base) {
+        variants.add(withoutPrefix + suffix);
+        variants.add(withoutPrefix.replace(/[\/_-]+/g, '.') + suffix);
+        variants.add(withoutPrefix.replace(/[^A-ZÇĞİÖŞÜ0-9]/g, '') + suffix);
+      }
+      variants.delete(original);
+      return variants;
+    };
+
+    for (const item of source) {
+      for (const alias of variantsOf(item.poz)) {
+        const key = normalizePoz(alias);
+        if (!key || exact.has(key)) continue;
+        const record = {...item, poz: alias, pozAlias: true, orijinalPoz: item.poz};
+        exact.set(key, record);
+        aliases.push(record);
+      }
+    }
+    if (aliases.length) window.POZ_DATA = [...source, ...aliases];
+    window.BYSAY_POZ_ALIAS_COUNT = aliases.length;
+  };
+
   const loadInstitutionalData = async () => {
-    // Eski veya yarım kalmış veri parçalarının yeni yüklemeye karışmasını engelle.
     window.BYSAY_INSTITUTIONAL_BOOKS_B64 = '';
     window.BYSAY_INSTITUTIONAL_BOOKS_LOADED = false;
     window.BYSAY_INSTITUTIONAL_BOOKS_META = null;
+    window.BYSAY_INSTITUTIONAL_BOOK_CATALOG = [];
+    window.BYSAY_INSTITUTIONAL_BOOK_RECORDS = [];
 
     for (let part = 1; part <= 16; part++) {
       const number = String(part).padStart(2, '0');
       await loadScript(`data/institutional-books-${number}.js?v=${VERSION}`);
+    }
+    if (typeof DecompressionStream !== 'function' && !window.pako) {
+      await loadScript('https://cdn.jsdelivr.net/npm/pako@2.1.0/dist/pako.min.js');
     }
     await loadScript(`institutional-books-loader.js?v=${VERSION}`);
     if (typeof window.BYSAY_LOAD_INSTITUTIONAL_BOOKS !== 'function') {
@@ -154,12 +195,14 @@
     }
 
     addMontajDemontajRecords();
+    addPozAliases();
 
     try {
       await loadScript(`app.js?v=${VERSION}`);
       await loadScript(`word-xml-sanitize.js?v=${VERSION}`);
       await loadScript(`word-import-all-20260712.js?v=${VERSION}`);
       await loadScript(`final-ui-20260712.js?v=${VERSION}`);
+      await loadScript(`book-catalog-20260712.js?v=${VERSION}`);
     } catch (error) {
       console.error(error);
       alert(error?.message || 'Program başlatılırken bir hata oluştu.');
