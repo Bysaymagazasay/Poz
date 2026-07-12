@@ -1,7 +1,7 @@
 (() => {
   'use strict';
 
-  const VERSION = '20260712-26';
+  const VERSION = '20260712-27';
   const NEXT_STAGE = 'DSI';
   const loadScript = source => new Promise((resolve,reject)=>{const s=document.createElement('script');s.src=source;s.onload=resolve;s.onerror=()=>reject(new Error(`Program dosyası yüklenemedi: ${source}`));document.body.appendChild(s);});
   const normalizePoz = value => String(value ?? '').trim().toUpperCase().replace(/\s+/g,'').replace(/[–—−]/g,'-');
@@ -38,8 +38,9 @@
     try{if(typeof window.BYSAY_LOAD_USER_BOOKS==='function')await window.BYSAY_LOAD_USER_BOOKS();}catch(error){console.error(error);window.BYSAY_USER_BOOK_ERROR=error?.message||String(error);}
     try{if(typeof window.BYSAY_LOAD_ELECTRIC_2026!=='function')throw new Error('Elektrik fiyat düzeltme yükleyicisi bulunamadı.');await window.BYSAY_LOAD_ELECTRIC_2026();}catch(error){console.error(error);window.BYSAY_ELECTRIC_LOAD_ERROR=error?.message||String(error);}
     addMontajDemontajRecords();addPozAliases();
+    try{if(typeof window.BYSAY_APPLY_HIDDEN_BOOKS==='function')window.BYSAY_APPLY_HIDDEN_BOOKS();}catch(error){console.error(error);window.BYSAY_HIDDEN_BOOK_ERROR=error?.message||String(error);}
     try{await loadScript(`app.js?v=${VERSION}`);await loadScript(`word-xml-sanitize.js?v=${VERSION}`);await loadScript(`word-import-all-20260712.js?v=${VERSION}`);await loadScript(`final-ui-20260712.js?v=${VERSION}`);await loadScript(`book-catalog-20260712.js?v=${VERSION}`);}catch(error){console.error(error);alert(error?.message||'Program başlatılırken bir hata oluştu.');return;}
-    const errors=[];if(window.BYSAY_DATA_LOAD_ERROR)errors.push(`İnşaat fiyat listesi: ${window.BYSAY_DATA_LOAD_ERROR}`);if(window.BYSAY_USER_BOOK_ERROR)errors.push(`Kayıtlı poz kitapları: ${window.BYSAY_USER_BOOK_ERROR}`);if(window.BYSAY_ELECTRIC_LOAD_ERROR)errors.push(`Elektrik fiyat listesi: ${window.BYSAY_ELECTRIC_LOAD_ERROR}`);
+    const errors=[];if(window.BYSAY_DATA_LOAD_ERROR)errors.push(`İnşaat fiyat listesi: ${window.BYSAY_DATA_LOAD_ERROR}`);if(window.BYSAY_USER_BOOK_ERROR)errors.push(`Kayıtlı poz kitapları: ${window.BYSAY_USER_BOOK_ERROR}`);if(window.BYSAY_ELECTRIC_LOAD_ERROR)errors.push(`Elektrik fiyat listesi: ${window.BYSAY_ELECTRIC_LOAD_ERROR}`);if(window.BYSAY_HIDDEN_BOOK_ERROR)errors.push(`Poz kitabı görünürlüğü: ${window.BYSAY_HIDDEN_BOOK_ERROR}`);
     if(errors.length)setTimeout(()=>{const t=document.getElementById('toast');if(t){t.textContent=errors.join(' • ');t.classList.add('show');}},150);
   })();
 })();
