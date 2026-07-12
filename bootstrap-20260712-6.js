@@ -1,7 +1,7 @@
 (() => {
   'use strict';
 
-  const VERSION = '20260712-16';
+  const VERSION = '20260712-17';
 
   const loadScript = source => new Promise((resolve, reject) => {
     const script = document.createElement('script');
@@ -48,7 +48,7 @@
     const records = new Map();
     source.forEach(item => records.set(normalizePoz(item.poz), {
       ...item,
-      kitap: item.kitap || bookCode(item.poz),
+      kitap: item.kitap || item.disiplin || bookCode(item.poz),
       kitapKaynak: item.kitapKaynak || (item.kaynak ? '' : 'ÇŞİDB Temmuz 2026')
     }));
 
@@ -58,7 +58,7 @@
       if (!baseCode || baseCode.endsWith('-M') || baseCode.endsWith('-D')) continue;
       const montaj = parseNumber(item.montaj);
       if (!Number.isFinite(montaj)) continue;
-      const kitap = item.kitap || bookCode(item.poz);
+      const kitap = item.kitap || item.disiplin || bookCode(item.poz);
       const kitapKaynak = item.kitapKaynak || (item.kaynak ? '' : 'ÇŞİDB Temmuz 2026');
 
       const montajCode = `${baseCode}-M`;
@@ -98,8 +98,20 @@
       ...meta,
       recordCount: window.POZ_DATA.length,
       specialRecordCount: added,
-      sourceFile: 'Çevre, Şehircilik Bakanlığı • Temmuz 2026 mekanik, inşaat ve elektrik birim fiyatları'
+      sourceFile: meta.sourceFile || 'ÇŞİDB Temmuz 2026 + AYGM + DSİ + KGM + PTT + İLBANK'
     };
+  };
+
+  const loadInstitutionalData = async () => {
+    for (let part = 1; part <= 16; part++) {
+      const number = String(part).padStart(2, '0');
+      await loadScript(`data/institutional-books-${number}.js?v=${VERSION}`);
+    }
+    await loadScript(`institutional-books-loader.js?v=${VERSION}`);
+    if (typeof window.BYSAY_LOAD_INSTITUTIONAL_BOOKS !== 'function') {
+      throw new Error('Kurum poz kitapları yükleyicisi bulunamadı.');
+    }
+    return await window.BYSAY_LOAD_INSTITUTIONAL_BOOKS();
   };
 
   (async () => {
@@ -114,6 +126,13 @@
     } catch (error) {
       console.error('İnşaat birim fiyat listesi yüklenemedi:', error);
       window.BYSAY_DATA_LOAD_ERROR = error?.message || String(error);
+    }
+
+    try {
+      await loadInstitutionalData();
+    } catch (error) {
+      console.error('Kurum poz kitapları yüklenemedi:', error);
+      window.BYSAY_INSTITUTIONAL_BOOK_ERROR = error?.message || String(error);
     }
 
     try {
@@ -140,6 +159,7 @@
 
     const errors = [];
     if (window.BYSAY_DATA_LOAD_ERROR) errors.push(`İnşaat fiyat listesi: ${window.BYSAY_DATA_LOAD_ERROR}`);
+    if (window.BYSAY_INSTITUTIONAL_BOOK_ERROR) errors.push(`Kurum poz kitapları: ${window.BYSAY_INSTITUTIONAL_BOOK_ERROR}`);
     if (window.BYSAY_USER_BOOK_ERROR) errors.push(`Kayıtlı poz kitapları: ${window.BYSAY_USER_BOOK_ERROR}`);
     if (errors.length) {
       setTimeout(() => {
