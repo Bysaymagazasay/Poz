@@ -10,137 +10,22 @@
 <body>
   <div class="page-shell">
     <header class="topbar">
-      <div class="brand">
-        <div class="brand-mark" aria-hidden="true">B</div>
-        <div>
-          <div class="brand-name">BYSAY</div>
-          <div class="brand-sub">Mekanik Tesisat Poz ve Maliyet Sistemi</div>
-        </div>
-      </div>
-      <div class="top-stats">
-        <div class="stat"><span id="recordCount">—</span><small>poz kaydı</small></div>
-        <div class="stat"><span>2026</span><small>Temmuz listesi</small></div>
-      </div>
+      <div class="brand"><div class="brand-mark" aria-hidden="true">B</div><div><div class="brand-name">BYSAY</div><div class="brand-sub">Mekanik Tesisat Poz ve Maliyet Sistemi</div></div></div>
+      <div class="top-stats"><div class="stat"><span id="recordCount">—</span><small>poz kaydı</small></div><div class="stat"><span>2026</span><small>Temmuz listesi</small></div></div>
     </header>
-
     <main>
-      <section class="hero-card">
-        <div>
-          <span class="eyebrow">POZ SORGULAMA VE MALİYET HESABI</span>
-          <h1>Pozları dosyadan alın, toplam maliyeti otomatik hesaplayın.</h1>
-          <p>Excel, CSV veya Word tablosundaki poz numaraları ile miktarları otomatik tespit eder. Poz tanımı, birimi ve güncel fiyatı kaynak listeden getirerek satır toplamlarını hesaplar.</p>
-        </div>
-        <div class="hero-actions">
-          <button class="btn btn-file" id="selectFileBtn"><span>⇧</span> Dosya Seç ve Aktar</button>
-          <button class="btn btn-primary" id="addRowBtn"><span>＋</span> Yeni Satır</button>
-          <button class="btn btn-secondary" id="focusPasteBtn"><span>≡</span> Çoklu Yapıştır</button>
-          <input id="fileInput" type="file" accept=".xlsx,.xls,.xlsm,.csv,.tsv,.txt,.docx" hidden>
-        </div>
-      </section>
-
-      <section class="file-import-card" id="dropZone">
-        <div class="drop-icon">⇧</div>
-        <div class="drop-copy">
-          <h2>Dosyadan otomatik aktarım</h2>
-          <p>Dosyayı bu alana sürükleyin veya <button class="text-button" id="selectFileTextBtn">bilgisayardan seçin</button>. Desteklenen biçimler: Excel, CSV, TSV ve Word (.docx) tabloları.</p>
-          <div class="import-result" id="importResult">
-            <span class="import-result-icon">✓</span>
-            <div><strong id="importFileName">Dosya adı</strong><small id="importDetail">Aktarım bilgisi</small></div>
-          </div>
-        </div>
-        <div class="file-badge">Poz No + Miktar<br><span>otomatik algılama</span></div>
-      </section>
-
-      <section class="paste-card" id="pasteCard">
-        <div class="section-head compact">
-          <div>
-            <h2>Toplu poz ve miktar ekle</h2>
-            <p>Excel’den iki sütun halinde kopyalayabilirsiniz: ilk sütun poz no, ikinci sütun miktar.</p>
-          </div>
-          <button class="icon-btn" id="closePasteBtn" aria-label="Kapat">×</button>
-        </div>
-        <textarea id="bulkInput" rows="5" placeholder="Örnek:&#10;25.100.1001    4&#10;25.180.2008    12,5&#10;25.652.1401    2"></textarea>
-        <div class="paste-actions">
-          <span id="pasteHint">Miktar yazılmazsa 1 kabul edilir.</span>
-          <div>
-            <button class="btn btn-ghost" id="clearPasteBtn">Temizle</button>
-            <button class="btn btn-primary" id="importPasteBtn">Listeye Aktar</button>
-          </div>
-        </div>
-      </section>
-
-      <section class="workspace-card">
-        <div class="section-head">
-          <div>
-            <h2>Poz ve miktar listesi</h2>
-            <p>Poz veya miktarı değiştirdiğinizde satır ve genel toplam otomatik güncellenir.</p>
-          </div>
-          <div class="toolbar">
-            <button class="btn btn-ghost" id="clearAllBtn">Listeyi Temizle</button>
-            <button class="btn btn-secondary" id="lookupAllBtn">Tümünü Sorgula</button>
-          </div>
-        </div>
-
-        <div class="summary-bar">
-          <div><span class="dot dot-green"></span><strong id="foundCount">0</strong> bulundu</div>
-          <div><span class="dot dot-red"></span><strong id="missingCount">0</strong> bulunamadı</div>
-          <div><span class="dot dot-gray"></span><strong id="waitingCount">0</strong> bekliyor</div>
-          <div class="summary-spacer"></div>
-          <div id="lastAction">Sorguya hazır</div>
-        </div>
-
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th class="col-order">#</th>
-                <th class="col-poz">Poz No</th>
-                <th class="col-status">Durum</th>
-                <th class="col-desc">Poz Tanımı</th>
-                <th class="col-unit">Birim</th>
-                <th class="col-qty">Miktar</th>
-                <th class="col-price">Poz Fiyatı</th>
-                <th class="col-total">Satır Toplamı</th>
-                <th class="col-price col-installation">Montaj Bedeli</th>
-                <th class="col-action"></th>
-              </tr>
-            </thead>
-            <tbody id="resultBody"></tbody>
-          </table>
-          <div class="empty-state" id="emptyState">
-            <div class="empty-icon">⌕</div>
-            <h3>Henüz satır bulunmuyor</h3>
-            <p>“Dosya Seç ve Aktar”, “Yeni Satır” veya “Çoklu Yapıştır” ile başlayın.</p>
-          </div>
-        </div>
-
-        <div class="footer-actions">
-          <div class="source-note"><span>i</span><div><strong>Veri kaynağı</strong><small id="sourceName">Yükleniyor…</small></div></div>
-          <div class="grand-total">
-            <small>GENEL TOPLAM</small>
-            <strong id="grandTotal">0,00 TL</strong>
-            <em>Poz fiyatı × miktar</em>
-          </div>
-          <div class="footer-buttons">
-            <button class="btn btn-ghost" id="printBtn">Yazdır</button>
-            <button class="btn btn-primary" id="exportBtn">CSV İndir</button>
-          </div>
-        </div>
-      </section>
+      <section class="hero-card"><div><span class="eyebrow">POZ SORGULAMA VE MALİYET HESABI</span><h1>Pozları dosyadan alın, toplam maliyeti otomatik hesaplayın.</h1><p>Excel, CSV veya Word tablosundaki poz numaraları ile miktarları otomatik tespit eder. Poz tanımı, birimi ve güncel fiyatı kaynak listeden getirerek satır toplamlarını hesaplar.</p></div><div class="hero-actions"><button class="btn btn-file" id="selectFileBtn"><span>⇧</span> Dosya Seç ve Aktar</button><button class="btn btn-primary" id="addRowBtn"><span>＋</span> Yeni Satır</button><button class="btn btn-secondary" id="focusPasteBtn"><span>≡</span> Çoklu Yapıştır</button><input id="fileInput" type="file" accept=".xlsx,.xls,.xlsm,.csv,.tsv,.txt,.docx" hidden></div></section>
+      <section class="file-import-card" id="dropZone"><div class="drop-icon">⇧</div><div class="drop-copy"><h2>Dosyadan otomatik aktarım</h2><p>Dosyayı bu alana sürükleyin veya <button class="text-button" id="selectFileTextBtn">bilgisayardan seçin</button>. Desteklenen biçimler: Excel, CSV, TSV ve Word (.docx) tabloları.</p><div class="import-result" id="importResult"><span class="import-result-icon">✓</span><div><strong id="importFileName">Dosya adı</strong><small id="importDetail">Aktarım bilgisi</small></div></div></div><div class="file-badge">Poz No + Miktar<br><span>otomatik algılama</span></div></section>
+      <section class="paste-card" id="pasteCard"><div class="section-head compact"><div><h2>Toplu poz ve miktar ekle</h2><p>Excel’den iki sütun halinde kopyalayabilirsiniz: ilk sütun poz no, ikinci sütun miktar.</p></div><button class="icon-btn" id="closePasteBtn" aria-label="Kapat">×</button></div><textarea id="bulkInput" rows="5" placeholder="Örnek:&#10;25.100.1001    4&#10;25.180.2008    12,5&#10;25.652.1401    2"></textarea><div class="paste-actions"><span id="pasteHint">Miktar yazılmazsa 1 kabul edilir.</span><div><button class="btn btn-ghost" id="clearPasteBtn">Temizle</button><button class="btn btn-primary" id="importPasteBtn">Listeye Aktar</button></div></div></section>
+      <section class="workspace-card"><div class="section-head"><div><h2>Poz ve miktar listesi</h2><p>Poz veya miktarı değiştirdiğinizde satır ve genel toplam otomatik güncellenir.</p></div><div class="toolbar"><button class="btn btn-ghost" id="clearAllBtn">Listeyi Temizle</button><button class="btn btn-secondary" id="lookupAllBtn">Tümünü Sorgula</button></div></div><div class="summary-bar"><div><span class="dot dot-green"></span><strong id="foundCount">0</strong> bulundu</div><div><span class="dot dot-red"></span><strong id="missingCount">0</strong> bulunamadı</div><div><span class="dot dot-gray"></span><strong id="waitingCount">0</strong> bekliyor</div><div class="summary-spacer"></div><div id="lastAction">Sorguya hazır</div></div><div class="table-wrap"><table><thead><tr><th class="col-order">#</th><th class="col-poz">Poz No</th><th class="col-status">Durum</th><th class="col-desc">Poz Tanımı</th><th class="col-unit">Birim</th><th class="col-qty">Miktar</th><th class="col-price">Poz Fiyatı</th><th class="col-total">Satır Toplamı</th><th class="col-price col-installation">Montaj Bedeli</th><th class="col-action"></th></tr></thead><tbody id="resultBody"></tbody></table><div class="empty-state" id="emptyState"><div class="empty-icon">⌕</div><h3>Henüz satır bulunmuyor</h3><p>“Dosya Seç ve Aktar”, “Yeni Satır” veya “Çoklu Yapıştır” ile başlayın.</p></div></div><div class="footer-actions"><div class="source-note"><span>i</span><div><strong>Veri kaynağı</strong><small id="sourceName">Yükleniyor…</small></div></div><div class="grand-total"><small>GENEL TOPLAM</small><strong id="grandTotal">0,00 TL</strong><em>Poz fiyatı × miktar</em></div><div class="footer-buttons"><button class="btn btn-ghost" id="printBtn">Yazdır</button><button class="btn btn-primary" id="exportBtn">CSV İndir</button></div></div></section>
     </main>
-
     <footer>© 2026 BYSAY • Tarayıcıda çalışır. Seçtiğiniz dosyalar bilgisayarınızdan dışarı gönderilmez.</footer>
   </div>
-
-  <div class="loading-overlay" id="loadingOverlay" aria-hidden="true">
-    <div class="loader"></div><strong>Dosya inceleniyor…</strong><span>Poz numaraları ve miktarlar tespit ediliyor.</span>
-  </div>
-  <div class="toast" id="toast" role="status" aria-live="polite"></div>
-  <!-- Dosya okuyucular güvenilir CDN üzerinden yüklenir. Belge içeriği tarayıcıdan dışarı gönderilmez. -->
+  <div class="loading-overlay" id="loadingOverlay" aria-hidden="true"><div class="loader"></div><strong>Dosya inceleniyor…</strong><span>Poz numaraları ve miktarlar tespit ediliyor.</span></div><div class="toast" id="toast" role="status" aria-live="polite"></div>
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
   <script src="data.js"></script>
   <script src="app.js"></script>
-  <script src="word-import-fix.js?v=20260712-2"></script>
+  <script src="word-import-fix.js?v=20260712-3"></script>
 </body>
 </html>
