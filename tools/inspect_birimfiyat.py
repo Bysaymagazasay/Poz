@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup
 BASE='https://www.birimfiyat.net/'
 s=requests.Session()
 s.headers.update({'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/126 Safari/537.36'})
-params=[('poz-ara',''),('arananSozcuk','35'),('pozNoda','1'),('bfKitaplar[]','10'),('bfYil','31.12.2026'),('siralama','pozno'),('bfPozTipleri[]','140'),('bfPozTipleri[]','232')]
+params=[('arananSozcuk','35.100'),('pozNoda','1'),('bfKitaplar[]','10'),('bfYil','31.12.2026'),('siralama','pozno'),('bfPozTipleri[]','140'),('bfPozTipleri[]','232')]
 r=s.get(BASE,params=params,timeout=60)
 open('browse.html','w',encoding='utf-8').write(r.text)
 soup=BeautifulSoup(r.text,'html.parser')
