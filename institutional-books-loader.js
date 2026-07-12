@@ -1,7 +1,7 @@
 (() => {
   'use strict';
 
-  const VERSION = '20260712-19';
+  const VERSION = '20260712-20';
   const normalizePoz = value => String(value ?? '')
     .trim().toUpperCase().replace(/\s+/g, '')
     .replace(/[–—−]/g, '-');
@@ -9,16 +9,12 @@
   const prepareBase64 = value => {
     let text = String(value ?? '');
     if (!text) throw new Error('Kurum poz kitabı veri parçaları bulunamadı.');
-
-    // Farklı kaynaklardan gelen parçalarda oluşabilen boşluk, görünmez karakter,
-    // URL-safe işaret ve ara padding sorunlarını temizle.
     text = text
       .replace(/[\u0000-\u0020\u007f-\u00a0\u200b-\u200f\u2028\u2029\ufeff]/g, '')
       .replace(/-/g, '+')
       .replace(/_/g, '/')
       .replace(/[^A-Za-z0-9+/=]/g, '')
       .replace(/=/g, '');
-
     const remainder = text.length % 4;
     if (remainder === 1) {
       throw new Error(`Kurum poz kitabı veri paketi eksik veya bozuk (${text.length} karakter).`);
@@ -39,21 +35,32 @@
   };
 
   const gunzipText = async bytes => {
-    if (typeof DecompressionStream !== 'function') {
-      throw new Error('Tarayıcınız sıkıştırılmış poz verisini açmayı desteklemiyor. Chrome veya Firefox güncel sürümünü kullanın.');
+    if (typeof DecompressionStream === 'function') {
+      try {
+        const stream = new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));
+        return await new Response(stream).text();
+      } catch (error) {
+        console.warn('DecompressionStream kullanılamadı, pako deneniyor:', error);
+      }
     }
-    try {
-      const stream = new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));
-      return await new Response(stream).text();
-    } catch (error) {
-      throw new Error(`Kurum poz kitabı sıkıştırılmış verisi açılamadı: ${error?.message || error}`);
+    if (window.pako?.ungzip) {
+      try {
+        return window.pako.ungzip(bytes, {to: 'string'});
+      } catch (error) {
+        throw new Error(`Kurum poz kitabı sıkıştırılmış verisi açılamadı: ${error?.message || error}`);
+      }
     }
+    throw new Error('Sıkıştırılmış poz verisini açacak tarayıcı bileşeni yüklenemedi.');
   };
 
-  const formatPrice = value => new Intl.NumberFormat('tr-TR', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2
-  }).format(Number(value) || 0);
+  const formatPrice = value => {
+    const number = Number(value);
+    if (!Number.isFinite(number)) return String(value ?? '').trim();
+    return new Intl.NumberFormat('tr-TR', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 4
+    }).format(number);
+  };
 
   window.BYSAY_LOAD_INSTITUTIONAL_BOOKS = async () => {
     if (window.BYSAY_INSTITUTIONAL_BOOKS_LOADED) {
@@ -82,8 +89,9 @@
     base.forEach(item => merged.set(normalizePoz(item.poz), item));
 
     const counts = {};
+    const fullRecords = [];
     for (const row of payload.records) {
-      const [poz, tanim, birim, fiyat, bookIndex, kategori, disciplineIndex] = row;
+      const [poz, tanim, birim, fiyat, bookIndex, kategori, disciplineIndex, montaj] = row;
       const book = payload.books[bookIndex];
       if (!poz || !book) continue;
       const record = {
@@ -91,43 +99,53 @@
         tanim: tanim || '',
         birim: birim || '',
         fiyat: formatPrice(fiyat),
-        montaj: '',
+        montaj: montaj == null || montaj === '' ? '' : formatPrice(montaj),
         kaynak: book.name,
         kitapKaynak: book.name,
         kitapKurum: book.institution,
+        kitapId: book.id || `book-${bookIndex}`,
+        kitapIndex: bookIndex,
         kurum: book.institution,
         kategori: kategori || '',
         disiplin: disciplines[disciplineIndex] || 'İNŞ',
         veriSurumu: payload.version || VERSION
       };
+      fullRecords.push(record);
       merged.set(normalizePoz(poz), record);
-      counts[book.id] = (counts[book.id] || 0) + 1;
+      counts[record.kitapId] = (counts[record.kitapId] || 0) + 1;
     }
 
-    if (!payload.books.length || !payload.records.length) {
+    if (!payload.books.length || !fullRecords.length) {
       throw new Error('Kurum poz kitabı veri paketi boş.');
     }
 
+    const catalog = payload.books.map((book, index) => ({
+      ...book,
+      id: book.id || `book-${index}`,
+      index,
+      count: counts[book.id || `book-${index}`] || 0
+    }));
+
     window.POZ_DATA = Array.from(merged.values());
+    window.BYSAY_INSTITUTIONAL_BOOK_CATALOG = catalog;
+    window.BYSAY_INSTITUTIONAL_BOOK_RECORDS = fullRecords;
+
     const meta = window.POZ_META || {};
-    const bookNames = payload.books.map(book => book.name);
+    const bookNames = catalog.map(book => book.name);
     window.POZ_META = {
       ...meta,
       recordCount: window.POZ_DATA.length,
-      institutionalBookCount: payload.books.length,
-      institutionalRecordCount: payload.records.length,
+      institutionalBookCount: catalog.length,
+      institutionalRecordCount: fullRecords.length,
       institutionalBookNames: bookNames,
-      sourceFile: [
-        'ÇŞİDB Temmuz 2026',
-        ...bookNames
-      ].join(' + ')
+      sourceFile: ['ÇŞİDB Temmuz 2026', ...bookNames].join(' + ')
     };
 
     window.BYSAY_INSTITUTIONAL_BOOKS_LOADED = true;
     window.BYSAY_INSTITUTIONAL_BOOKS_META = {
       version: payload.version || VERSION,
-      bookCount: payload.books.length,
-      recordCount: payload.records.length,
+      bookCount: catalog.length,
+      recordCount: fullRecords.length,
       names: bookNames,
       counts,
       encodedLength: encoded.length,
