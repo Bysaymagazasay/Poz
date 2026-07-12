@@ -1,1 +1,27 @@
-.topbar{min-height:94px;height:auto;padding:12px 42px}.brand{display:flex;align-items:center;gap:18px;min-width:0}.brand-mark.brand-logo{width:150px;height:66px;border-radius:0;background:transparent;box-shadow:none;border:0;overflow:visible;display:flex;align-items:center;justify-content:flex-start}.brand-logo img{display:block;width:150px;height:66px;object-fit:contain;opacity:.60;filter:grayscale(100%) contrast(112%)}.brand-name{font-size:24px;line-height:1.1;letter-spacing:.005em;font-weight:800}.brand-sub{font-size:12px;margin-top:5px;color:#c8d2e1}.word-source-meta{margin-top:5px!important;font-size:11.5px!important;line-height:1.4!important;color:#7b8798!important;font-weight:500!important}.word-source-meta strong{display:none!important}.description .word-source-meta,.unit-cell .word-source-meta{color:#7b8798!important}.poz-cell-wrap{display:flex;align-items:center;gap:8px;width:100%}.poz-cell-wrap .poz-input{min-width:0;flex:1}.book-tag{display:inline-flex;align-items:center;justify-content:center;min-width:42px;height:31px;padding:0 8px;border-radius:9px;background:#eef2ff;color:#475467;border:1px solid #dbe2f1;font-size:10px;font-weight:800;letter-spacing:.04em;white-space:nowrap}.book-tag.is-empty{display:none}th.col-installation,td.installation-cell{display:none!important}.col-poz{width:215px!important}.col-total{width:155px!important}table{min-width:1390px!important}@media(max-width:1400px){.brand-name{font-size:21px}.brand-mark.brand-logo,.brand-logo img{width:132px}}@media print{.word-source-meta{font-size:10.5px!important;color:#666!important}.book-tag{border:0;background:transparent;padding:0;min-width:auto;height:auto}}
+.topbar{min-height:94px;height:auto;padding:12px 42px}
+.brand{display:flex;align-items:center;gap:18px;min-width:0}
+.brand-mark.brand-logo{width:150px;height:66px;border-radius:0;background:transparent;box-shadow:none;border:0;overflow:visible;display:flex;align-items:center;justify-content:flex-start}
+.brand-logo img{display:block;width:150px;height:66px;object-fit:contain;opacity:.62;filter:grayscale(100%) contrast(112%)}
+.brand-name{font-size:24px;line-height:1.1;letter-spacing:.005em;font-weight:800}
+.brand-sub{font-size:12px;margin-top:5px;color:#c8d2e1}
+.word-source-meta{margin-top:5px!important;font-size:11.5px!important;line-height:1.4!important;color:#566f9f!important;font-weight:500!important}
+.word-source-meta strong{display:none!important}
+.description .word-source-meta,.unit-cell .word-source-meta{color:#566f9f!important}
+th.col-installation,td.installation-cell{display:none!important}
+.col-poz{width:170px!important}
+.col-discipline{width:88px!important;text-align:center!important}
+.col-book-source{width:175px!important;text-align:left!important}
+.col-total{width:150px!important}
+table{min-width:1510px!important}
+.discipline-cell{text-align:center!important}
+.book-source-cell{text-align:left!important}
+.discipline-badge,.source-book-badge{display:inline-flex;align-items:center;justify-content:center;border-radius:9px;border:1px solid #dbe2f1;font-size:10px;font-weight:800;letter-spacing:.035em;line-height:1.2}
+.discipline-badge{min-width:48px;height:31px;padding:0 9px;background:#eef2ff;color:#475467}
+.discipline-mek{background:#e8f5ff;color:#11638d;border-color:#c9e7f7}
+.discipline-inş{background:#edf8ef;color:#277443;border-color:#d0ead7}
+.discipline-elk{background:#fff6df;color:#8a6112;border-color:#f2dfa8}
+.discipline-özl{background:#f4efff;color:#6842a1;border-color:#dfd2f4}
+.source-book-badge{max-width:165px;min-height:31px;padding:6px 9px;background:#f8fafc;color:#526078;border-color:#dce3ec;white-space:normal;text-align:left;font-weight:700;letter-spacing:0}
+.poz-cell-wrap{display:block!important;width:100%}.poz-cell-wrap .poz-input{width:100%}.poz-cell-wrap .book-tag{display:none!important}
+@media(max-width:1400px){.brand-name{font-size:21px}.brand-mark.brand-logo,.brand-logo img{width:132px}.col-book-source{width:155px!important}.source-book-badge{max-width:145px}}
+@media print{.word-source-meta{font-size:10.5px!important;color:#666!important}.discipline-badge,.source-book-badge{border:0;background:transparent;padding:0;min-width:auto;height:auto;max-width:none}}
