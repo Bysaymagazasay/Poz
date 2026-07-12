@@ -54,11 +54,23 @@
     }
   };
 
-  const bind = () => {
-    document.getElementById('saveBtn')?.addEventListener('click', save);
-    setTimeout(restore, 100);
+  const waitForProgram = (attempt = 0) => {
+    const saveButton = document.getElementById('saveBtn');
+    const importButton = document.getElementById('importPasteBtn');
+    const resultBody = document.getElementById('resultBody');
+
+    if (saveButton && importButton && resultBody && resultBody.querySelector('tr')) {
+      saveButton.addEventListener('click', save);
+      restore();
+      return;
+    }
+
+    if (attempt < 100) setTimeout(() => waitForProgram(attempt + 1), 100);
   };
 
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', bind, {once: true});
-  else bind();
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => waitForProgram(), {once: true});
+  } else {
+    waitForProgram();
+  }
 })();
