@@ -3,6 +3,8 @@ on:
   push:
     branches: [ main ]
   workflow_dispatch:
+permissions:
+  contents: write
 jobs:
   crawl:
     runs-on: ubuntu-latest
@@ -11,6 +13,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: bf-site-inspect
+          fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
@@ -25,3 +28,12 @@ jobs:
             electric_birimfiyat_results.csv
             electric_birimfiyat_progress.json
             electric-crawl.log
+      - name: Sonuclari dala kaydet
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -B electric-results
+          git add -f electric_birimfiyat_results.json electric_birimfiyat_results.csv electric_birimfiyat_progress.json electric-crawl.log
+          git commit -m "Elektrik poz tanim sorgu sonuclari" || true
+          git push --force origin electric-results
