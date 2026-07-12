@@ -33,9 +33,12 @@
         tag.className = 'book-tag';
         wrapper.appendChild(tag);
       }
+
       const code = input.value.trim();
-      tag.textContent = code ? bookAbbr(code) : '';
-      tag.classList.toggle('is-empty', !code);
+      const nextText = code ? bookAbbr(code) : '';
+      if (tag.textContent !== nextText) tag.textContent = nextText;
+      const shouldHide = !code;
+      if (tag.classList.contains('is-empty') !== shouldHide) tag.classList.toggle('is-empty', shouldHide);
     });
   };
 
@@ -89,7 +92,7 @@
 
     const body = document.getElementById('resultBody');
     if (body) {
-      new MutationObserver(() => requestAnimationFrame(decorateRows)).observe(body, {childList: true, subtree: true});
+      new MutationObserver(() => requestAnimationFrame(decorateRows)).observe(body, {childList: true});
       body.addEventListener('input', event => {
         if (event.target.matches('.poz-input')) requestAnimationFrame(decorateRows);
       });
