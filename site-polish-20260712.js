@@ -13,6 +13,10 @@
     .replace(/ş/g, 's').replace(/ö/g, 'o').replace(/ç/g, 'c')
     .replace(/[^a-z0-9]+/g, '');
 
+  const setText = (element, value) => {
+    if (element && element.textContent !== value) element.textContent = value;
+  };
+
   const notify = (message, duration = 3200) => {
     const toast = document.getElementById('toast');
     if (!toast) return;
@@ -47,7 +51,7 @@
       dropIcon.setAttribute('title', 'Dosya seç');
     }
     const dropTitle = document.querySelector('.drop-title');
-    if (dropTitle) dropTitle.textContent = 'Dosyayı sürükleyin veya seçin';
+    setText(dropTitle, 'Dosyayı sürükleyin veya seçin');
   };
 
   const cardText = card => String(card?.textContent || '').toLocaleLowerCase('tr-TR');
@@ -70,17 +74,17 @@
     logo?.classList.add('logo-csidb');
 
     if (isElectric) {
-      if (initials) initials.textContent = 'ÇE';
-      if (title) title.textContent = 'ÇŞİDB Elektrik';
-      if (full) full.textContent = 'Çevre, Şehircilik ve İklim Değişikliği Bakanlığı • Elektrik';
+      setText(initials, 'ÇE');
+      setText(title, 'ÇŞİDB Elektrik');
+      setText(full, 'Çevre, Şehircilik ve İklim Değişikliği Bakanlığı • Elektrik');
     } else if (isMechanical) {
-      if (initials) initials.textContent = 'ÇM';
-      if (title) title.textContent = 'ÇŞİDB Mekanik';
-      if (full) full.textContent = 'Çevre, Şehircilik ve İklim Değişikliği Bakanlığı • Mekanik';
+      setText(initials, 'ÇM');
+      setText(title, 'ÇŞİDB Mekanik');
+      setText(full, 'Çevre, Şehircilik ve İklim Değişikliği Bakanlığı • Mekanik');
     } else if (isConstruction) {
-      if (initials) initials.textContent = 'Çİ';
-      if (title) title.textContent = 'ÇŞİDB İnşaat';
-      if (full) full.textContent = 'Çevre, Şehircilik ve İklim Değişikliği Bakanlığı • İnşaat';
+      setText(initials, 'Çİ');
+      setText(title, 'ÇŞİDB İnşaat');
+      setText(full, 'Çevre, Şehircilik ve İklim Değişikliği Bakanlığı • İnşaat');
     }
   };
 
@@ -111,16 +115,16 @@
     modal.querySelector('#pozBookList')?.remove();
 
     const title = modal.querySelector('#pozBookTitle');
-    if (title) title.textContent = 'Poz Kitapları';
+    setText(title, 'Poz Kitapları');
     const intro = modal.querySelector('.book-modal-head p');
-    if (intro) intro.textContent = 'Tüm poz kitaplarını tek listede görüntüleyin, açın, güncelleyin veya silin.';
+    setText(intro, 'Tüm poz kitaplarını tek listede görüntüleyin, açın, güncelleyin veya silin.');
 
     const panel = modal.querySelector('#programBookCatalog');
     if (!panel) return;
     const heading = panel.querySelector('.program-book-catalog-head strong');
-    if (heading) heading.textContent = 'Tüm Poz Kitapları';
+    setText(heading, 'Tüm Poz Kitapları');
     const helper = panel.querySelector('.program-book-catalog-head > span');
-    if (helper) helper.textContent = 'Kitaba tıklayarak tam listeyi açın';
+    setText(helper, 'Kitaba tıklayarak tam listeyi açın');
 
     panel.querySelectorAll('.catalog-book-card').forEach(card => {
       fixCsidbCard(card);
@@ -256,7 +260,7 @@
     button.addEventListener('click', () => {
       if (!window.XLSX) return notify('Excel oluşturma bileşeni yüklenemedi.', 5000);
       const table = document.querySelector('.workspace-card table');
-      const bodyRows = [...document.querySelectorAll('#resultBody tr')];
+      const bodyRows = [...document.querySelectorAll('#resultBody tr')].filter(tr => String(tr.querySelector('[data-role="poz"]')?.value || '').trim());
       if (!table || !bodyRows.length) return notify('İndirilecek sonuç yok.');
 
       const headerCells = [...table.querySelectorAll('thead th')];
