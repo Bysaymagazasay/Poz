@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light">
   <title>BYSAY Poz ve Maliyet Hesaplama</title>
-  <link rel="stylesheet" href="styles.css?v=20260712-8">
+  <link rel="stylesheet" href="styles.css?v=20260712-9">
 </head>
 <body>
   <div class="page-shell">
@@ -19,14 +19,14 @@
       <section class="paste-card" id="pasteCard"><div class="section-head compact"><div><h2>Toplu poz ve miktar ekle</h2><p>Excel’den iki sütun halinde kopyalayabilirsiniz: ilk sütun poz no, ikinci sütun miktar.</p></div><button class="icon-btn" id="closePasteBtn" aria-label="Kapat">×</button></div><textarea id="bulkInput" rows="5" placeholder="Örnek:&#10;15.100.1001    4&#10;25.180.2008    12,5&#10;25.652.1401    2"></textarea><div class="paste-actions"><span id="pasteHint">Miktar yazılmazsa 1 kabul edilir.</span><div><button class="btn btn-ghost" id="clearPasteBtn">Temizle</button><button class="btn btn-primary" id="importPasteBtn">Listeye Aktar</button></div></div></section>
       <section class="workspace-card"><div class="section-head"><div><h2>Poz ve miktar listesi</h2><p>Poz veya miktarı değiştirdiğinizde satır ve genel toplam otomatik güncellenir.</p></div><div class="toolbar"><button class="btn btn-ghost" id="clearAllBtn">Listeyi Temizle</button><button class="btn btn-secondary" id="lookupAllBtn">Tümünü Sorgula</button></div></div><div class="summary-bar"><div><span class="dot dot-green"></span><strong id="foundCount">0</strong> bulundu</div><div><span class="dot dot-red"></span><strong id="missingCount">0</strong> bulunamadı</div><div><span class="dot dot-gray"></span><strong id="waitingCount">0</strong> bekliyor</div><div class="summary-spacer"></div><div id="lastAction">Sorguya hazır</div></div><div class="table-wrap"><table><thead><tr><th class="col-order">#</th><th class="col-poz">Poz No</th><th class="col-status">Durum</th><th class="col-desc">Poz Tanımı</th><th class="col-unit">Birim</th><th class="col-qty">Miktar</th><th class="col-price">Poz Fiyatı</th><th class="col-total">Satır Toplamı</th><th class="col-price col-installation">Montaj Bedeli</th><th class="col-action"></th></tr></thead><tbody id="resultBody"></tbody></table><div class="empty-state" id="emptyState"><div class="empty-icon">⌕</div><h3>Henüz satır bulunmuyor</h3><p>“Dosya Seç ve Aktar”, “Yeni Satır” veya “Çoklu Yapıştır” ile başlayın.</p></div></div><div class="footer-actions"><div class="source-note"><span>i</span><div><strong>Veri kaynakları</strong><small id="sourceName">Yükleniyor…</small></div></div><div class="grand-total"><small>GENEL TOPLAM</small><strong id="grandTotal">0,00 TL</strong><em>Poz fiyatı × miktar</em></div><div class="footer-buttons"><button class="btn btn-secondary" id="saveBtn">Kaydet</button><button class="btn btn-ghost" id="printBtn">Yazdır</button><button class="btn btn-primary" id="exportBtn">CSV İndir</button></div></div></section>
     </main>
-    <footer>© 2026 BYSAY • Sürüm 2026.07.12.8 • Mekanik + İnşaat fiyat listeleri</footer>
+    <footer>© 2026 BYSAY • Sürüm 2026.07.12.9 • Mekanik + İnşaat fiyat listeleri</footer>
   </div>
   <div class="loading-overlay" id="loadingOverlay" aria-hidden="true"><div class="loader"></div><strong>Dosya inceleniyor…</strong><span>Poz numaraları ve miktarlar tespit ediliyor.</span></div><div class="toast" id="toast" role="status" aria-live="polite"></div>
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
-  <script src="data.js?v=20260712-8"></script>
-  <script src="insaat-data-2026-temmuz.js?v=20260712-8"></script>
-  <script src="bootstrap-20260712-6.js?v=20260712-8"></script>
-  <script src="persistence-20260712.js?v=20260712-8"></script>
+  <script src="data.js?v=20260712-9"></script>
+  <script src="insaat-chunk-loader-20260712-v9.js?v=20260712-9"></script>
+  <script src="bootstrap-20260712-6.js?v=20260712-9"></script>
+  <script src="persistence-20260712.js?v=20260712-9"></script>
 </body>
 </html>
