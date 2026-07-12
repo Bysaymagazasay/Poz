@@ -24,12 +24,27 @@ jobs:
     steps:
       - name: Kaynak kodu al
         uses: actions/checkout@v4
+
+      - name: Elektrik PDF okuyucusunu kur
+        run: sudo apt-get update && sudo apt-get install -y poppler-utils
+
+      - name: Temmuz 2026 elektrik fiyatlarını oluştur
+        run: python3 scripts/build_electric_data.py
+
+      - name: Üretilen elektrik verisini doğrula
+        run: |
+          test -s generated/electric-data.js
+          grep -q '5911' generated/electric-data.js
+          ls -lh generated/electric-data.js
+
       - name: GitHub Pages ayarları
         uses: actions/configure-pages@v5
+
       - name: Site dosyalarını hazırla
         uses: actions/upload-pages-artifact@v3
         with:
           path: .
+
       - name: Siteyi yayınla
         id: deployment
         uses: actions/deploy-pages@v4
