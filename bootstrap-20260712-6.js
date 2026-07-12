@@ -1,7 +1,7 @@
 (() => {
   'use strict';
 
-  const VERSION = '20260712-21';
+  const VERSION = '20260712-22';
   const REPO_CDN = 'https://cdn.jsdelivr.net/gh/Bysaymagazasay/Poz@main/';
   const REPO_RAW = 'https://raw.githubusercontent.com/Bysaymagazasay/Poz/main/';
 
@@ -20,17 +20,17 @@
     (0, eval)(`${code}\n//# sourceURL=${source.replace(/\s/g, '_')}`);
   };
 
-  const fetchScriptText = async source => {
+  const fetchScriptText = async (source, expectedToken) => {
     const response = await fetch(source, {cache: 'no-store', mode: 'cors'});
     if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
     const code = await response.text();
-    if (!code.includes('BYSAY_INSTITUTIONAL_BOOKS_B64')) {
-      throw new Error('Beklenen poz kitabı veri içeriği bulunamadı.');
+    if (!code.includes(expectedToken)) {
+      throw new Error(`Beklenen veri içeriği bulunamadı: ${expectedToken}`);
     }
     executeScriptText(code, source);
   };
 
-  const loadInstitutionalPart = async path => {
+  const loadDataPart = async (path, expectedToken) => {
     const stamp = `${VERSION}-${Date.now()}`;
     const sources = [
       `${path}?v=${stamp}`,
@@ -42,7 +42,7 @@
     for (const source of sources) {
       for (let attempt = 1; attempt <= 2; attempt++) {
         try {
-          await fetchScriptText(source);
+          await fetchScriptText(source, expectedToken);
           return;
         } catch (error) {
           errors.push(`${source} (${error?.message || error})`);
@@ -140,7 +140,7 @@
       ...meta,
       recordCount: window.POZ_DATA.length,
       specialRecordCount: added,
-      sourceFile: meta.sourceFile || 'ÇŞİDB Temmuz 2026 + AYGM + DSİ + KGM + PTT + İLBANK'
+      sourceFile: meta.sourceFile || 'ÇŞİDB Temmuz 2026 + AYGM 2026 1. Dönem'
     };
   };
 
@@ -182,26 +182,47 @@
   };
 
   const loadInstitutionalData = async () => {
+    window.BYSAY_KURUM_BOOKS_B64 = '';
     window.BYSAY_INSTITUTIONAL_BOOKS_B64 = '';
     window.BYSAY_INSTITUTIONAL_BOOKS_LOADED = false;
     window.BYSAY_INSTITUTIONAL_BOOKS_META = null;
     window.BYSAY_INSTITUTIONAL_BOOK_CATALOG = [];
     window.BYSAY_INSTITUTIONAL_BOOK_RECORDS = [];
+    window.BYSAY_ACTIVE_INSTITUTIONAL_STAGE = null;
 
-    for (let part = 1; part <= 16; part++) {
+    // Eski ve doğru 16 parçalı veri serisinin ilk iki parçası bu adlarla kayıtlıdır.
+    for (let part = 1; part <= 2; part++) {
       const number = String(part).padStart(2, '0');
-      await loadInstitutionalPart(`data/institutional-books-${number}.js`);
+      await loadDataPart(`data/kurum-books-b64-${number}.js`, 'BYSAY_KURUM_BOOKS_B64');
     }
+
+    const firstParts = String(window.BYSAY_KURUM_BOOKS_B64 || '');
+    if (!firstParts.startsWith('H4sI') || firstParts.length < 10000) {
+      throw new Error(`AYGM veri paketinin ilk bölümü eksik (${firstParts.length} karakter).`);
+    }
+    window.BYSAY_INSTITUTIONAL_BOOKS_B64 = firstParts;
+
+    // Aynı 16 parçalı serinin devamı.
+    for (let part = 3; part <= 16; part++) {
+      const number = String(part).padStart(2, '0');
+      await loadDataPart(`data/institutional-books-${number}.js`, 'BYSAY_INSTITUTIONAL_BOOKS_B64');
+    }
+
+    const encoded = String(window.BYSAY_INSTITUTIONAL_BOOKS_B64 || '');
+    if (encoded.length < 100000 || encoded.length % 4 === 1) {
+      throw new Error(`AYGM veri paketi tamamlanamadı (${encoded.length} karakter).`);
+    }
+
     if (typeof DecompressionStream !== 'function' && !window.pako) {
       await loadScript('https://cdn.jsdelivr.net/npm/pako@2.1.0/dist/pako.min.js');
     }
     await loadScript(`institutional-books-loader.js?v=${VERSION}`);
     if (typeof window.BYSAY_LOAD_INSTITUTIONAL_BOOKS !== 'function') {
-      throw new Error('Kurum poz kitapları yükleyicisi bulunamadı.');
+      throw new Error('AYGM poz kitabı yükleyicisi bulunamadı.');
     }
     const result = await window.BYSAY_LOAD_INSTITUTIONAL_BOOKS();
-    if (!result || result.bookCount < 5 || result.recordCount < 1000) {
-      throw new Error(`Kurum poz kitapları eksik yüklendi (${result?.bookCount || 0} kitap, ${result?.recordCount || 0} poz).`);
+    if (!result || result.stage !== 'AYGM' || result.bookCount < 1 || result.recordCount < 1) {
+      throw new Error(`AYGM poz kitabı eksik yüklendi (${result?.bookCount || 0} kitap, ${result?.recordCount || 0} poz).`);
     }
     return result;
   };
@@ -223,7 +244,7 @@
     try {
       await loadInstitutionalData();
     } catch (error) {
-      console.error('Kurum poz kitapları yüklenemedi:', error);
+      console.error('AYGM poz kitabı yüklenemedi:', error);
       window.BYSAY_INSTITUTIONAL_BOOK_ERROR = error?.message || String(error);
     }
 
@@ -253,7 +274,7 @@
 
     const errors = [];
     if (window.BYSAY_DATA_LOAD_ERROR) errors.push(`İnşaat fiyat listesi: ${window.BYSAY_DATA_LOAD_ERROR}`);
-    if (window.BYSAY_INSTITUTIONAL_BOOK_ERROR) errors.push(`Kurum poz kitapları: ${window.BYSAY_INSTITUTIONAL_BOOK_ERROR}`);
+    if (window.BYSAY_INSTITUTIONAL_BOOK_ERROR) errors.push(`AYGM poz kitabı: ${window.BYSAY_INSTITUTIONAL_BOOK_ERROR}`);
     if (window.BYSAY_USER_BOOK_ERROR) errors.push(`Kayıtlı poz kitapları: ${window.BYSAY_USER_BOOK_ERROR}`);
     if (errors.length) {
       setTimeout(() => {
