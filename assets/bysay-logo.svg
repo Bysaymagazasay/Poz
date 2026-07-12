@@ -1,8 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="720" height="180" viewBox="0 0 720 180" role="img" aria-label="BySay">
-  <g fill="none" stroke="#ffffff" stroke-width="5">
-    <circle cx="88" cy="90" r="67"/>
-    <path d="M35 56a67 67 0 0 1 106 0M35 124a67 67 0 0 0 106 0" opacity=".9"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="190" viewBox="0 0 760 190" role="img" aria-label="BySay">
+  <g fill="none" stroke="#ffffff" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="92" cy="95" r="72" stroke-width="6"/>
+    <circle cx="92" cy="95" r="65" stroke-width="2.5" opacity=".72"/>
+    <path d="M27 95h130" stroke-width="3.5" opacity=".95"/>
   </g>
-  <text x="42" y="117" fill="#ffffff" font-family="Georgia, 'Times New Roman', serif" font-size="79" font-style="italic">BS</text>
-  <text x="176" y="128" fill="#ffffff" font-family="Georgia, 'Times New Roman', serif" font-size="116">BySay</text>
+  <text x="47" y="121" fill="#ffffff" font-family="Georgia, 'Times New Roman', serif" font-size="79" font-style="italic" font-weight="600">BS</text>
+  <text x="186" y="136" fill="#ffffff" font-family="Georgia, 'Times New Roman', serif" font-size="122">BySay</text>
 </svg>
