@@ -4,6 +4,8 @@
   const input = document.getElementById('fileInput');
   if (!input) return;
 
+  const META_KEY = 'BYSAY_WORD_AKTARIM_META_V1';
+
   const normalizeHeader = value => String(value ?? '')
     .toLocaleLowerCase('tr-TR')
     .replace(/ı/g, 'i').replace(/ğ/g, 'g').replace(/ü/g, 'u')
@@ -21,8 +23,8 @@
   const isPozCode = value => {
     const code = cleanCode(value);
     if (!code || code.length < 3 || code.length > 90 || !/[0-9]/.test(code)) return false;
-    if (/^\d+(?:\.\d+){2,}(?:[-/][A-Z0-9]+)?$/i.test(code)) return true;
-    return /^[A-ZÇĞİÖŞÜ0-9]+(?:[._\/-]+[A-ZÇĞİÖŞÜ0-9]+)+$/i.test(code);
+    if (/^\d+(?:\.\d+){2,}(?:[-/][A-Z0-9]+)*(?:-(?:D|M))?$/i.test(code)) return true;
+    return /^[A-ZÇĞİÖŞÜ0-9]+(?:[._\/-]+[A-ZÇĞİÖŞÜ0-9]+)+(?:-(?:D|M))?$/i.test(code);
   };
 
   const parseQuantity = value => {
@@ -52,13 +54,15 @@
 
   const cellText = cell => {
     const paragraphs = nodesByLocalName(cell, 'p');
-    if (!paragraphs.length) {
-      return nodesByLocalName(cell, 't').map(node => node.textContent || '').join('').trim();
-    }
+    if (!paragraphs.length) return nodesByLocalName(cell, 't').map(node => node.textContent || '').join('').trim();
     return paragraphs.map(paragraph =>
       nodesByLocalName(paragraph, 't').map(node => node.textContent || '').join('')
     ).join(' ').replace(/\u00a0/g, ' ').replace(/\s+/g, ' ').trim();
   };
+
+  const escapeHtml = value => String(value ?? '').replace(/[&<>'"]/g, character => ({
+    '&':'&amp;', '<':'&lt;', '>':'&gt;', "'":'&#39;', '"':'&quot;'
+  }[character]));
 
   const showToast = (message, duration = 6000) => {
     const toast = document.getElementById('toast');
@@ -86,71 +90,81 @@
     }).filter(row => row.length);
   }
 
+  const headerTerms = {
+    code: ['iskalemino','iskaleminumarasi','iskalemnumarasi','pozno','poznumarasi','kalemno','poz'],
+    qty: ['miktar','miktari','adet','adedi','metraj','quantity','qty'],
+    desc: ['iskalemiadivekisaciklamasi','iskalemiadi','iskalemiismi','poztanimi','tanim','aciklama','imalatincinsi','isinadi'],
+    unit: ['birim','birimi','olcubirimi']
+  };
+
+  function matchesHeader(value, terms) {
+    const normalized = normalizeHeader(value);
+    return terms.some(key => normalized === key || normalized.includes(key));
+  }
+
   function detectColumns(grid) {
     let headerRow = -1;
-    let codeCol = -1;
-    let qtyCol = -1;
+    const columns = {code: -1, qty: -1, desc: -1, unit: -1};
 
-    for (let r = 0; r < Math.min(grid.length, 80); r++) {
-      const row = grid[r] || [];
-      for (let c = 0; c < row.length; c++) {
-        const header = normalizeHeader(row[c]);
-        if (codeCol < 0 && [
-          'iskalemino', 'iskaleminumarasi', 'iskalemnumarasi',
-          'pozno', 'poznumarasi', 'kalemno', 'poz'
-        ].some(key => header === key || header.includes(key))) {
-          headerRow = r;
-          codeCol = c;
-        }
-        if (qtyCol < 0 && [
-          'miktar', 'miktari', 'adet', 'adedi', 'metraj', 'quantity', 'qty'
-        ].some(key => header === key || header.includes(key))) {
-          qtyCol = c;
+    for (let rowIndex = 0; rowIndex < Math.min(grid.length, 80); rowIndex++) {
+      const row = grid[rowIndex] || [];
+      for (let column = 0; column < row.length; column++) {
+        for (const type of Object.keys(columns)) {
+          if (columns[type] < 0 && matchesHeader(row[column], headerTerms[type])) {
+            columns[type] = column;
+            headerRow = Math.max(headerRow, rowIndex);
+          }
         }
       }
     }
 
-    const maxCols = Math.max(0, ...grid.map(row => row.length));
-    if (codeCol < 0) {
+    const maxColumns = Math.max(0, ...grid.map(row => row.length));
+    if (columns.code < 0) {
       let bestScore = 0;
-      for (let c = 0; c < maxCols; c++) {
+      for (let column = 0; column < maxColumns; column++) {
         let score = 0;
-        for (const row of grid.slice(0, 250)) if (isPozCode(row[c])) score++;
-        if (score > bestScore) { bestScore = score; codeCol = c; }
+        for (const row of grid.slice(0, 250)) if (isPozCode(row[column])) score++;
+        if (score > bestScore) { bestScore = score; columns.code = column; }
       }
     }
 
-    if (qtyCol < 0 && codeCol >= 0) {
+    if (columns.qty < 0 && columns.code >= 0) {
       let bestScore = 0;
-      for (let c = codeCol + 1; c < maxCols; c++) {
+      for (let column = columns.code + 1; column < maxColumns; column++) {
         let score = 0;
-        for (const row of grid.slice(0, 250)) if (parseQuantity(row[c])) score++;
-        if (score > bestScore) { bestScore = score; qtyCol = c; }
+        for (const row of grid.slice(0, 250)) if (parseQuantity(row[column])) score++;
+        if (score > bestScore) { bestScore = score; columns.qty = column; }
       }
     }
 
-    return {headerRow, codeCol, qtyCol};
+    return {headerRow, ...columns};
   }
 
   function extractRows(grid) {
-    const {headerRow, codeCol, qtyCol} = detectColumns(grid);
-    if (codeCol < 0) return [];
+    const detected = detectColumns(grid);
+    if (detected.code < 0) return [];
 
     const results = [];
-    const start = headerRow >= 0 ? headerRow + 1 : 0;
-    for (let r = start; r < grid.length; r++) {
-      const row = grid[r] || [];
-      const code = cleanCode(row[codeCol]);
+    const start = detected.headerRow >= 0 ? detected.headerRow + 1 : 0;
+    for (let rowIndex = start; rowIndex < grid.length; rowIndex++) {
+      const row = grid[rowIndex] || [];
+      const code = cleanCode(row[detected.code]);
       if (!isPozCode(code)) continue;
 
-      let quantity = qtyCol >= 0 ? parseQuantity(row[qtyCol]) : '';
+      let quantity = detected.qty >= 0 ? parseQuantity(row[detected.qty]) : '';
       if (!quantity) {
-        for (let c = codeCol + 1; c < row.length; c++) {
-          quantity = parseQuantity(row[c]);
+        for (let column = detected.code + 1; column < row.length; column++) {
+          quantity = parseQuantity(row[column]);
           if (quantity) break;
         }
       }
-      results.push({code, quantity: quantity || '1'});
+
+      results.push({
+        code,
+        quantity: quantity || '1',
+        description: detected.desc >= 0 ? String(row[detected.desc] ?? '').trim() : '',
+        unit: detected.unit >= 0 ? String(row[detected.unit] ?? '').trim() : ''
+      });
     }
     return results;
   }
@@ -168,8 +182,62 @@
     const tables = nodesByLocalName(xml, 'tbl');
     const grids = tables.map(tableToGrid).filter(grid => grid.length);
     const rows = grids.flatMap(extractRows);
-    if (!rows.length) throw new Error('Word tablosundaki İş Kalemi No değerleri okunamadı (yeni okuyucu v4).');
+    if (!rows.length) throw new Error('Word tablosundaki İş Kalemi No değerleri okunamadı.');
     return rows;
+  }
+
+  let metadataRows = [];
+  try {
+    const saved = JSON.parse(localStorage.getItem(META_KEY) || '[]');
+    if (Array.isArray(saved)) metadataRows = saved;
+  } catch (_) {}
+
+  const saveMetadata = rows => {
+    metadataRows = rows.map(row => ({
+      code: cleanCode(row.code),
+      description: String(row.description || '').trim(),
+      unit: String(row.unit || '').trim()
+    }));
+    try { localStorage.setItem(META_KEY, JSON.stringify(metadataRows)); } catch (_) {}
+  };
+
+  const decorateRows = () => {
+    const tableRows = Array.from(document.querySelectorAll('#resultBody tr'));
+    if (!tableRows.length || !metadataRows.length) return;
+
+    const grouped = new Map();
+    for (const item of metadataRows) {
+      const code = cleanCode(item.code);
+      if (!grouped.has(code)) grouped.set(code, []);
+      grouped.get(code).push(item);
+    }
+
+    const used = new Map();
+    for (const tableRow of tableRows) {
+      const code = cleanCode(tableRow.querySelector('.poz-input')?.value || '');
+      const list = grouped.get(code);
+      tableRow.querySelectorAll('.word-source-meta').forEach(node => node.remove());
+      if (!list?.length) continue;
+
+      const index = used.get(code) || 0;
+      const meta = list[Math.min(index, list.length - 1)];
+      used.set(code, index + 1);
+
+      const descriptionCell = tableRow.querySelector('.description');
+      const unitCell = tableRow.querySelector('.unit-cell');
+      if (descriptionCell && meta.description) {
+        descriptionCell.insertAdjacentHTML('beforeend', `<div class="word-source-meta"><strong>Belgedeki Tanım:</strong> ${escapeHtml(meta.description)}</div>`);
+      }
+      if (unitCell && meta.unit) {
+        unitCell.insertAdjacentHTML('beforeend', `<div class="word-source-meta"><strong>Belgedeki Birim:</strong> ${escapeHtml(meta.unit)}</div>`);
+      }
+    }
+  };
+
+  const resultBody = document.getElementById('resultBody');
+  if (resultBody) {
+    new MutationObserver(() => requestAnimationFrame(decorateRows)).observe(resultBody, {childList: true});
+    setTimeout(decorateRows, 250);
   }
 
   input.addEventListener('change', async event => {
@@ -182,22 +250,25 @@
 
     try {
       const rows = await readDocx(file);
+      saveMetadata(rows);
+
       const bulk = document.getElementById('bulkInput');
       const importButton = document.getElementById('importPasteBtn');
       if (!bulk || !importButton) throw new Error('Programdaki aktarım alanı bulunamadı.');
 
       bulk.value = rows.map(row => `${row.code}\t${row.quantity}`).join('\n');
       importButton.click();
+      setTimeout(decorateRows, 80);
 
       const fileName = document.getElementById('importFileName');
       const detail = document.getElementById('importDetail');
       const result = document.getElementById('importResult');
       const lastAction = document.getElementById('lastAction');
       if (fileName) fileName.textContent = file.name;
-      if (detail) detail.textContent = `${rows.length.toLocaleString('tr-TR')} İş Kalemi No ve miktar aktarıldı`;
+      if (detail) detail.textContent = `${rows.length.toLocaleString('tr-TR')} İş Kalemi No, miktar, tanım ve birim aktarıldı`;
       if (result) result.classList.add('show');
       if (lastAction) lastAction.textContent = `${rows.length.toLocaleString('tr-TR')} satır Word dosyasından aktarıldı`;
-      showToast(`${rows.length.toLocaleString('tr-TR')} poz ve miktar başarıyla aktarıldı.`, 4500);
+      showToast(`${rows.length.toLocaleString('tr-TR')} poz başarıyla aktarıldı.`, 4500);
     } catch (error) {
       console.error(error);
       showToast(error?.message || 'Word dosyası okunurken bir hata oluştu.', 7000);
