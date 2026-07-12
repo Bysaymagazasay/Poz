@@ -1,0 +1,23 @@
+BYSAY POZ VE MALİYET HESAPLAMA PROGRAMI
+========================================
+
+ÇALIŞTIRMA
+1. ZIP dosyasını bir klasöre çıkarın.
+2. BASLAT.bat dosyasına çift tıklayın.
+3. Program varsayılan internet tarayıcınızda açılır.
+
+DOSYADAN OTOMATİK AKTARMA
+1. "Dosya Seç ve Aktar" düğmesine basın.
+2. Excel, CSV, TSV, TXT veya Word (.docx) dosyanızı seçin.
+3. Program dosyadaki poz numaralarını 2026 poz listesiyle eşleştirir.
+4. "Miktar", "Adet" veya "Metraj" başlıklı sütunu otomatik algılar.
+5. Poz fiyatı x miktar hesabıyla satır toplamını ve genel toplamı oluşturur.
+
+Desteklenen başlık örnekleri:
+- Poz No / Poz Numarası / İş Kalemi No
+- Miktar / Miktarı / Adet / Metraj
+
+Poz numarası bir açıklama hücresinin içinde yazıyorsa program yine tespit etmeye çalışır.
+Miktar bulunamazsa ilgili satırda miktar 1 kabul edilir ve aktarım bilgisinde belirtilir.
+
+Not: Tarayıcı güvenliği nedeniyle klasör yolu elle yazılmaz. "Dosya Seç" penceresinden dosyayı göstermeniz gerekir. Dosya internete gönderilmez.

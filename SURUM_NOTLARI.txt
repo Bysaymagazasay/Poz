@@ -1,0 +1,11 @@
+SÜRÜM 2 - DOSYADAN AKTARIM VE MALİYET HESABI
+
+- Excel (.xlsx, .xls, .xlsm), CSV, TSV, TXT ve Word (.docx) tablo desteği eklendi.
+- Poz No / Poz Numarası / İş Kalemi No sütunları otomatik algılanır.
+- Miktar / Adet / Metraj sütunları otomatik algılanır.
+- Poz kodu açıklama hücresinin içinde olsa da kaynak listeyle eşleştirilir.
+- Miktar alanı satır bazında değiştirilebilir.
+- Satır Toplamı = Poz Fiyatı x Miktar olarak hesaplanır.
+- Genel toplam otomatik hesaplanır.
+- CSV çıktısına miktar, satır toplamı ve kaynak bilgisi eklendi.
+- Dosyayı sürükleyip bırakma desteği eklendi.
