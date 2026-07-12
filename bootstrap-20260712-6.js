@@ -1,7 +1,7 @@
 (() => {
   'use strict';
 
-  const VERSION = '20260712-15';
+  const VERSION = '20260712-16';
 
   const loadScript = source => new Promise((resolve, reject) => {
     const script = document.createElement('script');
@@ -35,12 +35,22 @@
     maximumFractionDigits: 2
   }).format(value);
 
-  const bookCode = poz => /^25\./.test(normalizePoz(poz)) ? 'MEK' : (/^(15|16|17|18|19|20|21|22|23|24)\./.test(normalizePoz(poz)) ? 'İNŞ' : 'ÖZL');
+  const bookCode = poz => {
+    const code = normalizePoz(poz);
+    if (/^(35|36)\./.test(code)) return 'ELK';
+    if (/^25\./.test(code)) return 'MEK';
+    if (/^(15|16|17|18|19|20|21|22|23|24|77)\./.test(code)) return 'İNŞ';
+    return 'ÖZL';
+  };
 
   const addMontajDemontajRecords = () => {
     const source = Array.isArray(window.POZ_DATA) ? window.POZ_DATA : [];
     const records = new Map();
-    source.forEach(item => records.set(normalizePoz(item.poz), {...item, kitap: item.kitap || bookCode(item.poz)}));
+    source.forEach(item => records.set(normalizePoz(item.poz), {
+      ...item,
+      kitap: item.kitap || bookCode(item.poz),
+      kitapKaynak: item.kitapKaynak || (item.kaynak ? '' : 'ÇŞİDB Temmuz 2026')
+    }));
 
     let added = 0;
     for (const item of source) {
@@ -49,6 +59,7 @@
       const montaj = parseNumber(item.montaj);
       if (!Number.isFinite(montaj)) continue;
       const kitap = item.kitap || bookCode(item.poz);
+      const kitapKaynak = item.kitapKaynak || (item.kaynak ? '' : 'ÇŞİDB Temmuz 2026');
 
       const montajCode = `${baseCode}-M`;
       if (!records.has(montajCode)) {
@@ -59,6 +70,7 @@
           fiyat: formatPrice(montaj),
           kaynak: item.kaynak || 'Montaj fiyatı',
           kitap,
+          kitapKaynak,
           ozelTur: 'montaj'
         });
         added++;
@@ -73,6 +85,7 @@
           fiyat: formatPrice(montaj / 2),
           kaynak: item.kaynak || 'Demontaj fiyatı',
           kitap,
+          kitapKaynak,
           ozelTur: 'demontaj'
         });
         added++;
@@ -85,7 +98,7 @@
       ...meta,
       recordCount: window.POZ_DATA.length,
       specialRecordCount: added,
-      sourceFile: 'Çevre, Şehircilik Bakanlığı • Temmuz 2026 mekanik ve inşaat birim fiyatları'
+      sourceFile: 'Çevre, Şehircilik Bakanlığı • Temmuz 2026 mekanik, inşaat ve elektrik birim fiyatları'
     };
   };
 
