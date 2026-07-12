@@ -1,7 +1,7 @@
 (() => {
   'use strict';
 
-  const VERSION = '20260712-10';
+  const VERSION = '20260712-11';
 
   const loadScript = source => new Promise((resolve, reject) => {
     const script = document.createElement('script');
@@ -26,6 +26,15 @@
     }
 
     try {
+      if (typeof window.BYSAY_LOAD_USER_BOOKS === 'function') {
+        await window.BYSAY_LOAD_USER_BOOKS();
+      }
+    } catch (error) {
+      console.error('Kullanıcı poz kitapları yüklenemedi:', error);
+      window.BYSAY_USER_BOOK_ERROR = error?.message || String(error);
+    }
+
+    try {
       await loadScript(`app.js?v=${VERSION}`);
       await loadScript(`word-xml-sanitize.js?v=${VERSION}`);
       await loadScript(`word-import-all-20260712.js?v=${VERSION}`);
@@ -35,11 +44,14 @@
       return;
     }
 
-    if (window.BYSAY_DATA_LOAD_ERROR) {
+    const errors = [];
+    if (window.BYSAY_DATA_LOAD_ERROR) errors.push(`İnşaat fiyat listesi: ${window.BYSAY_DATA_LOAD_ERROR}`);
+    if (window.BYSAY_USER_BOOK_ERROR) errors.push(`Kayıtlı poz kitapları: ${window.BYSAY_USER_BOOK_ERROR}`);
+    if (errors.length) {
       setTimeout(() => {
         const toast = document.getElementById('toast');
         if (!toast) return;
-        toast.textContent = `İnşaat fiyat listesi yüklenemedi: ${window.BYSAY_DATA_LOAD_ERROR}`;
+        toast.textContent = errors.join(' • ');
         toast.classList.add('show');
       }, 150);
     }
