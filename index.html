@@ -7,10 +7,10 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <meta name="bysay-build" content="20260712-26">
+  <meta name="bysay-build" content="20260712-27">
   <script>
     (() => {
-      const build = '20260712-26';
+      const build = '20260712-27';
       const url = new URL(window.location.href);
       if (url.searchParams.get('build') !== build) {
         url.searchParams.set('build', build);
@@ -20,15 +20,16 @@
     })();
   </script>
   <title>Bysay Yaklaşık Hesap</title>
-  <link rel="stylesheet" href="styles.css?v=20260712-26">
-  <link rel="stylesheet" href="branding-20260712.css?v=20260712-26">
+  <link rel="stylesheet" href="styles.css?v=20260712-27">
+  <link rel="stylesheet" href="branding-20260712.css?v=20260712-27">
+  <link rel="stylesheet" href="site-polish-20260712.css?v=20260712-27">
 </head>
 <body>
   <div class="page-shell">
     <header class="topbar">
       <div class="brand">
         <div class="brand-mark brand-logo" aria-label="Bysay logosu">
-          <img id="brandLogo" src="assets/bysay-logo.svg?v=20260712-26" alt="Bysay">
+          <img id="brandLogo" src="assets/bysay-logo.svg?v=20260712-27" alt="Bysay">
         </div>
         <div>
           <div class="brand-name">Bysay Yaklaşık Hesap</div>
@@ -53,9 +54,11 @@
       </section>
 
       <section class="file-import-card" id="dropZone">
-        <div class="drop-icon" role="button" tabindex="0" aria-label="Dosya seç">⇧</div>
+        <div class="drop-icon" role="button" tabindex="0" aria-label="Dosya seç">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V5"></path><path d="m8 9 4-4 4 4"></path><path d="M5 14v4.25A1.75 1.75 0 0 0 6.75 20h10.5A1.75 1.75 0 0 0 19 18.25V14"></path></svg>
+        </div>
         <div class="drop-copy">
-          <div class="drop-title">Dosyayı buraya sürükleyin veya soldaki oka tıklayın</div>
+          <div class="drop-title">Dosyayı sürükleyin veya seçin</div>
           <button id="selectFileTextBtn" type="button" hidden aria-hidden="true" tabindex="-1">Dosya seç</button>
           <div class="import-result" id="importResult">
             <span class="import-result-icon">✓</span>
@@ -132,13 +135,13 @@
           <div class="footer-buttons">
             <button class="btn btn-secondary" id="saveBtn">Kaydet</button>
             <button class="btn btn-ghost" id="printBtn">Yazdır</button>
-            <button class="btn btn-primary" id="exportBtn">CSV İndir</button>
+            <button class="btn btn-primary" id="exportBtn">XLS İndir</button>
           </div>
         </div>
       </section>
     </main>
 
-    <footer>© 2026 BYSAY • Sürüm 2026.07.12.26 • Yaklaşık Maliyet Hesap Programı</footer>
+    <footer>© 2026 BYSAY • Sürüm 2026.07.12.27 • Yaklaşık Maliyet Hesap Programı</footer>
   </div>
 
   <div class="loading-overlay" id="loadingOverlay" aria-hidden="true">
@@ -150,19 +153,20 @@
 
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
-  <script src="data.js?v=20260712-26"></script>
-  <script src="data/insaat-b64-1.js?v=20260712-26"></script>
-  <script src="data/insaat-b64-2.js?v=20260712-26"></script>
-  <script src="data/insaat-b64-3.js?v=20260712-26"></script>
-  <script src="insaat-data-2026-temmuz.js?v=20260712-26"></script>
-  <script src="poz-book-manager-20260712.js?v=20260712-26"></script>
-  <script src="book-import-fix-20260712.js?v=20260712-26"></script>
-  <script src="user-book-loader-fix-20260712.js?v=20260712-26"></script>
-  <script src="generated/electric-data.js?v=20260712-26"></script>
-  <script src="electric-data-loader-20260712.js?v=20260712-26"></script>
-  <script src="bootstrap-20260712-6.js?v=20260712-26"></script>
-  <script src="saved-books-panel-20260712.js?v=20260712-26"></script>
-  <script src="persistence-20260712.js?v=20260712-26"></script>
-  <script src="ui-refresh-20260712.js?v=20260712-26"></script>
+  <script src="data.js?v=20260712-27"></script>
+  <script src="data/insaat-b64-1.js?v=20260712-27"></script>
+  <script src="data/insaat-b64-2.js?v=20260712-27"></script>
+  <script src="data/insaat-b64-3.js?v=20260712-27"></script>
+  <script src="insaat-data-2026-temmuz.js?v=20260712-27"></script>
+  <script src="poz-book-manager-20260712.js?v=20260712-27"></script>
+  <script src="book-import-fix-20260712.js?v=20260712-27"></script>
+  <script src="user-book-loader-fix-20260712.js?v=20260712-27"></script>
+  <script src="generated/electric-data.js?v=20260712-27"></script>
+  <script src="electric-data-loader-20260712.js?v=20260712-27"></script>
+  <script src="book-controls-preload-20260712.js?v=20260712-27"></script>
+  <script src="bootstrap-20260712-6.js?v=20260712-27"></script>
+  <script src="persistence-20260712.js?v=20260712-27"></script>
+  <script src="ui-refresh-20260712.js?v=20260712-27"></script>
+  <script src="site-polish-20260712.js?v=20260712-27"></script>
 </body>
 </html>
