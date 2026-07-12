@@ -5,26 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light">
   <title>Bysay Yaklaşık Maliyet Hesap Programı</title>
-  <link rel="stylesheet" href="styles.css?v=20260712-14">
-  <link rel="stylesheet" href="branding-20260712.css?v=20260712-14">
+  <link rel="stylesheet" href="styles.css?v=20260712-15">
+  <link rel="stylesheet" href="branding-20260712.css?v=20260712-15">
 </head>
 <body>
   <div class="page-shell">
     <header class="topbar">
       <div class="brand">
-        <div class="brand-mark brand-logo" aria-label="Bysay logosu">
-          <svg viewBox="0 0 260 90" role="img" aria-hidden="true">
-            <g fill="none" stroke="currentColor" stroke-width="2.5">
-              <path d="M8 43A37 37 0 0 1 77 43"/>
-              <path d="M8 49A37 37 0 0 0 77 49"/>
-            </g>
-            <text x="17" y="60" font-size="42" font-family="Georgia, 'Times New Roman', serif" font-style="italic" fill="currentColor">BS</text>
-            <text x="92" y="62" font-size="48" font-family="Georgia, 'Times New Roman', serif" fill="currentColor">BySay</text>
-          </svg>
-        </div>
+        <div class="brand-mark brand-logo" aria-label="Bysay logosu"><img id="brandLogo" alt="Bysay logo"></div>
         <div>
           <div class="brand-name">Bysay Yaklaşık Maliyet Hesap Programı</div>
-          <div class="brand-sub">Mekanik ve inşaat poz sorgulama sistemi</div>
+          <div class="brand-sub">Çevre, Şehircilik Bakanlığı • Temmuz 2026</div>
         </div>
       </div>
       <div class="top-stats"><div class="stat"><span id="recordCount">—</span><small>poz kaydı</small></div><div class="stat"><span>2026</span><small>Temmuz listesi</small></div></div>
@@ -58,22 +49,23 @@
           <div class="grand-total grand-total-top"><small>GENEL TOPLAM</small><strong id="grandTotal">0,00 TL</strong><em>Poz fiyatı × miktar</em></div>
         </div>
         <div class="summary-bar"><div><span class="dot dot-green"></span><strong id="foundCount">0</strong> bulundu</div><div><span class="dot dot-red"></span><strong id="missingCount">0</strong> bulunamadı</div><div><span class="dot dot-gray"></span><strong id="waitingCount">0</strong> bekliyor</div><div class="summary-spacer"></div><div id="lastAction">Sorguya hazır</div></div>
-        <div class="table-wrap"><table><thead><tr><th class="col-order">#</th><th class="col-poz">Poz No</th><th class="col-status">Durum</th><th class="col-desc">Poz Tanımı</th><th class="col-unit">Birim</th><th class="col-qty">Miktar</th><th class="col-price">Poz Fiyatı</th><th class="col-total">Satır Toplamı</th><th class="col-price col-installation">Montaj Bedeli</th><th class="col-action"></th></tr></thead><tbody id="resultBody"></tbody></table><div class="empty-state" id="emptyState"><div class="empty-icon">⌕</div><h3>Henüz satır bulunmuyor</h3><p>Dosya seçin veya yeni satır ekleyin.</p></div></div></div>
-        <div class="footer-actions footer-actions-simple"><div class="source-note"><span>i</span><div><strong>Veri kaynakları</strong><small id="sourceName">Yükleniyor…</small></div></div><div class="footer-buttons"><button class="btn btn-secondary" id="saveBtn">Kaydet</button><button class="btn btn-ghost" id="printBtn">Yazdır</button><button class="btn btn-primary" id="exportBtn">CSV İndir</button></div></div>
+        <div class="table-wrap"><table><thead><tr><th class="col-order">#</th><th class="col-poz">Poz No</th><th class="col-status">Durum</th><th class="col-desc">Poz Tanımı</th><th class="col-unit">Birim</th><th class="col-qty">Miktar</th><th class="col-price">Poz Fiyatı</th><th class="col-total">Satır Toplamı</th><th class="col-action"></th></tr></thead><tbody id="resultBody"></tbody></table><div class="empty-state" id="emptyState"><div class="empty-icon">⌕</div><h3>Henüz satır bulunmuyor</h3><p>Dosya seçin veya yeni satır ekleyin.</p></div></div></div>
+        <div class="footer-actions footer-actions-simple"><div class="source-note"><span>i</span><div><strong>Veri kaynağı</strong><small id="sourceName">Çevre, Şehircilik Bakanlığı • Temmuz 2026 birim fiyatları</small></div></div><div class="footer-buttons"><button class="btn btn-secondary" id="saveBtn">Kaydet</button><button class="btn btn-ghost" id="printBtn">Yazdır</button><button class="btn btn-primary" id="exportBtn">CSV İndir</button></div></div>
       </section>
     </main>
-    <footer>© 2026 BYSAY • Sürüm 2026.07.12.14 • Bysay Yaklaşık Maliyet Hesap Programı</footer>
+    <footer>© 2026 BYSAY • Sürüm 2026.07.12.15 • Yaklaşık Maliyet Hesap Programı</footer>
   </div>
   <div class="loading-overlay" id="loadingOverlay" aria-hidden="true"><div class="loader"></div><strong>Dosya inceleniyor…</strong><span>Poz numaraları ve miktarlar tespit ediliyor.</span></div><div class="toast" id="toast" role="status" aria-live="polite"></div>
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
-  <script src="data.js?v=20260712-14"></script>
-  <script src="data/insaat-b64-1.js?v=20260712-14"></script>
-  <script src="data/insaat-b64-2.js?v=20260712-14"></script>
-  <script src="data/insaat-b64-3.js?v=20260712-14"></script>
-  <script src="insaat-data-2026-temmuz.js?v=20260712-14"></script>
-  <script src="poz-book-manager-20260712.js?v=20260712-14"></script>
-  <script src="bootstrap-20260712-6.js?v=20260712-14"></script>
-  <script src="persistence-20260712.js?v=20260712-14"></script>
+  <script src="brand-logo-20260712.js?v=20260712-15"></script>
+  <script src="data.js?v=20260712-15"></script>
+  <script src="data/insaat-b64-1.js?v=20260712-15"></script>
+  <script src="data/insaat-b64-2.js?v=20260712-15"></script>
+  <script src="data/insaat-b64-3.js?v=20260712-15"></script>
+  <script src="insaat-data-2026-temmuz.js?v=20260712-15"></script>
+  <script src="poz-book-manager-20260712.js?v=20260712-15"></script>
+  <script src="bootstrap-20260712-6.js?v=20260712-15"></script>
+  <script src="persistence-20260712.js?v=20260712-15"></script>
 </body>
 </html>
