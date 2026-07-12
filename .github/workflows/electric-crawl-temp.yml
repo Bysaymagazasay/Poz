@@ -1,0 +1,27 @@
+name: Elektrik Poz Tanimlari Gecici
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+jobs:
+  crawl:
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: bf-site-inspect
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install requests beautifulsoup4
+      - run: python tools/crawl_electric_descriptions.py | tee electric-crawl.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: electric-birimfiyat-results-main
+          path: |
+            electric_birimfiyat_results.json
+            electric_birimfiyat_results.csv
+            electric_birimfiyat_progress.json
+            electric-crawl.log
