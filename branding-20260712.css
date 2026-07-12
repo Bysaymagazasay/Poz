@@ -25,3 +25,50 @@ table{min-width:1510px!important}
 .poz-cell-wrap{display:block!important;width:100%}.poz-cell-wrap .poz-input{width:100%}.poz-cell-wrap .book-tag{display:none!important}
 @media(max-width:1400px){.brand-name{font-size:21px}.brand-mark.brand-logo,.brand-logo img{width:132px}.col-book-source{width:155px!important}.source-book-badge{max-width:145px}}
 @media print{.word-source-meta{font-size:10.5px!important;color:#666!important}.discipline-badge,.source-book-badge{border:0;background:transparent;padding:0;min-width:auto;height:auto;max-width:none}}
+
+/* 2026.07.12.18 arayüz düzenlemeleri */
+.brand-mark.brand-logo{width:138px;height:62px}
+.brand-logo img{width:138px;height:62px;opacity:.96;filter:invert(1) grayscale(100%) contrast(190%) brightness(145%);mix-blend-mode:screen}
+.brand-name{font-size:23px;letter-spacing:0;font-weight:800;text-transform:none}
+.brand-sub{display:none!important}
+#selectFileBtn,#addRowBtn{display:none!important}
+.hero-card{padding:14px 18px}
+.hero-actions.full-width{align-items:center;gap:12px}
+#pozBookBtn{min-height:48px;border-radius:13px;padding:12px 17px;box-shadow:0 8px 20px rgba(15,23,42,.15)}
+#focusPasteBtn{margin-left:auto}
+.drop-icon{border:0;cursor:pointer;transition:.18s ease;box-shadow:0 6px 16px rgba(8,145,178,.10)}
+.drop-icon:hover,.drop-icon:focus-visible{transform:translateY(-1px);background:#dff8fb;box-shadow:0 9px 20px rgba(8,145,178,.18);outline:3px solid rgba(8,145,178,.12)}
+.drop-title{font-size:12.5px;color:#526078}
+.grand-total{min-width:205px;padding:8px 18px;border-radius:12px}
+.grand-total strong{font-size:19px;margin:1px 0}
+.grand-total small{font-size:8px}
+.grand-total em{font-size:8px}
+.loaded-book-shelf{display:flex;align-items:stretch;gap:8px;min-width:0;flex:1;overflow-x:auto;padding:1px 2px 4px;scrollbar-width:thin}
+.loaded-book-card{min-width:150px;max-width:190px;height:52px;border:1px solid #dce3ee;background:#fff;border-radius:13px;padding:7px 10px;display:flex;align-items:center;gap:9px;text-align:left;box-shadow:0 5px 14px rgba(16,24,40,.05);transition:.18s ease;color:#26344d}
+.loaded-book-card:hover{transform:translateY(-1px);border-color:#b8c7dc;box-shadow:0 9px 20px rgba(16,24,40,.09)}
+.loaded-book-logo{width:34px;height:34px;flex:0 0 34px;border-radius:10px;display:grid;place-items:center;font-weight:900;font-size:10px;letter-spacing:.02em;color:#fff;background:linear-gradient(145deg,#334155,#0f172a);box-shadow:inset 0 1px 0 rgba(255,255,255,.25)}
+.loaded-book-logo.logo-csidb{background:linear-gradient(145deg,#0f766e,#115e59)}
+.loaded-book-logo.logo-aygm{background:linear-gradient(145deg,#2563eb,#1d4ed8)}
+.loaded-book-logo.logo-dsi{background:linear-gradient(145deg,#0284c7,#0369a1)}
+.loaded-book-logo.logo-kgm{background:linear-gradient(145deg,#dc2626,#991b1b)}
+.loaded-book-logo.logo-ptt{background:linear-gradient(145deg,#f59e0b,#d97706);color:#31200a}
+.loaded-book-logo.logo-ilbank{background:linear-gradient(145deg,#16a34a,#15803d)}
+.loaded-book-logo.logo-custom{background:linear-gradient(145deg,#7c3aed,#5b21b6)}
+.loaded-book-copy{min-width:0;display:flex;flex-direction:column}
+.loaded-book-copy strong{font-size:10.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#26344d}
+.loaded-book-copy small{font-size:9px;color:#7a879b;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bottom-add-row{display:flex;justify-content:center;padding:12px 0 16px;background:#fff;border-top:1px solid #eef1f5}
+.bottom-add-row button{width:44px;height:44px;border-radius:50%;border:1px solid #cfd8e6;background:linear-gradient(145deg,#fff,#f3f6fb);color:#1d4ed8;font-size:28px;line-height:1;display:grid;place-items:center;box-shadow:0 8px 20px rgba(37,99,235,.12);transition:.18s ease}
+.bottom-add-row button:hover{transform:translateY(-2px);background:#eef4ff;border-color:#9db6ef;box-shadow:0 12px 24px rgba(37,99,235,.18)}
+.installed-books-panel{margin:4px 0 20px;padding:16px;border:1px solid #e0e6ef;border-radius:17px;background:#f8fafc}
+.installed-books-panel-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}
+.installed-books-panel-head strong{font-size:14px}.installed-books-panel-head small{font-size:11px;color:#748197}
+.installed-books-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.installed-book-item{border:1px solid #dde5ef;border-radius:13px;background:#fff;padding:10px 11px;display:flex;align-items:center;gap:10px}
+.installed-book-item .loaded-book-logo{width:38px;height:38px;flex-basis:38px}
+.installed-book-item strong{display:block;font-size:11.5px;color:#26344d}
+.installed-book-item small{display:block;margin-top:3px;font-size:9.5px;color:#7b8798}
+@media(max-width:1450px){.loaded-book-card{min-width:138px}.loaded-book-shelf{max-width:820px}.brand-mark.brand-logo,.brand-logo img{width:124px}}
+@media(max-width:900px){.installed-books-grid{grid-template-columns:1fr}}
+.book-modal{width:min(920px,100%)!important}
+.installed-book-item.selected{border-color:#7aa2ef;background:#eef4ff;box-shadow:0 0 0 3px rgba(37,99,235,.10)}
