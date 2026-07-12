@@ -1,5 +1,5 @@
 import json, re
-from urllib.parse import urljoin, urlparse, parse_qs
+from urllib.parse import urljoin
 import requests
 from bs4 import BeautifulSoup
 
@@ -7,7 +7,7 @@ BASE='https://www.birimfiyat.net/'
 s=requests.Session()
 s.headers.update({'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/126 Safari/537.36'})
 
-params=[('bfKitabi','10'),('bfYil','31.12.2026'),('bfPozTipleri[]','232')]
+params=[('kitaba-gozat',''),('bfKitabi','10'),('bfYil','31.12.2026'),('bfPozTipleri[]','232')]
 r=s.get(BASE,params=params,timeout=60)
 open('browse.html','w',encoding='utf-8').write(r.text)
 soup=BeautifulSoup(r.text,'html.parser')
