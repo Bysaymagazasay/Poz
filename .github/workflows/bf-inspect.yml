@@ -18,6 +18,5 @@ jobs:
           name: birimfiyat-inspect
           path: |
             inspect.log
-            query_results.json
-            query_*.html
-            home.html
+            browse_results.json
+            browse.html
