@@ -58,7 +58,7 @@
     if (document.querySelector('script[data-bysay-stage-ui]')) return;
     const script = document.createElement('script');
     script.dataset.bysayStageUi = '1';
-    script.src = `stage-ui-20260712.js?v=20260712-23-${Date.now()}`;
+    script.src = `stage-ui-20260712.js?v=20260712-26-${Date.now()}`;
     document.body.appendChild(script);
   };
 
