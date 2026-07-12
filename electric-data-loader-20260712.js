@@ -116,14 +116,25 @@
     window.BYSAY_USER_BOOK_CATALOG = correctedBooks;
     persistCorrectedBooks(correctedBooks.filter(book => book.correctedAt));
 
-    window.BYSAY_ELECTRIC_BOOK_CATALOG = [{
+    const officialRecords = Array.from(official.values());
+    const officialBook = {
       id: BOOK_ID,
       name: BOOK_NAME,
       institution: INSTITUTION,
       period: 'Temmuz 2026',
       count: official.size,
-      records: Array.from(official.values())
-    }];
+      records: officialRecords
+    };
+    window.BYSAY_ELECTRIC_BOOK_CATALOG = [officialBook];
+
+    const institutionalCatalog = Array.isArray(window.BYSAY_INSTITUTIONAL_BOOK_CATALOG)
+      ? window.BYSAY_INSTITUTIONAL_BOOK_CATALOG.filter(book => String(book.id) !== BOOK_ID)
+      : [];
+    const institutionalRecords = Array.isArray(window.BYSAY_INSTITUTIONAL_BOOK_RECORDS)
+      ? window.BYSAY_INSTITUTIONAL_BOOK_RECORDS.filter(record => String(record.kitapId) !== BOOK_ID)
+      : [];
+    window.BYSAY_INSTITUTIONAL_BOOK_CATALOG = [...institutionalCatalog, officialBook];
+    window.BYSAY_INSTITUTIONAL_BOOK_RECORDS = [...institutionalRecords, ...officialRecords];
 
     window.POZ_META = {
       ...(window.POZ_META || {}),
