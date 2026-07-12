@@ -82,4 +82,15 @@
     window.POZ_META = {...(window.POZ_META || {}), recordCount: Array.isArray(window.POZ_DATA) ? window.POZ_DATA.length : 0};
     return before - (Array.isArray(window.POZ_DATA) ? window.POZ_DATA.length : 0);
   };
+
+  const loadCatalogHotfix = () => {
+    if (document.querySelector('script[data-bysay-catalog-hotfix]')) return;
+    const script = document.createElement('script');
+    script.src = 'catalog-hotfix-20260712-28.js?v=20260712-28';
+    script.dataset.bysayCatalogHotfix = '1';
+    document.head.appendChild(script);
+  };
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', loadCatalogHotfix, {once:true});
+  else loadCatalogHotfix();
 })();
