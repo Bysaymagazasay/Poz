@@ -1,5 +1,5 @@
 name: Report mechanical build status
-# refresh 2026-07-13-3
+# refresh 2026-07-13-4
 on:
   push:
     branches: [main]
@@ -21,10 +21,11 @@ jobs:
           mkdir -p generated/mechanical-build-status
           gh api 'repos/${{ github.repository }}/actions/workflows/build-mechanical-history.yml/runs?per_page=10' > generated/mechanical-build-status/runs.json
           gh api 'repos/${{ github.repository }}/actions/workflows/export-mechanical-pdf-text.yml/runs?per_page=10' > generated/mechanical-build-status/text-export-runs.json
+          gh api 'repos/${{ github.repository }}/actions/workflows/ocr-2017-mechanical.yml/runs?per_page=10' > generated/mechanical-build-status/ocr-2017-runs.json
       - name: Commit status
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add generated/mechanical-build-status/runs.json generated/mechanical-build-status/text-export-runs.json
+          git add generated/mechanical-build-status
           git commit -m "Report mechanical build status" || exit 0
           git push
