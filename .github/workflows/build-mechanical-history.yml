@@ -11,8 +11,7 @@ on:
 
 permissions:
   contents: write
-
-actions: read
+  actions: read
 
 concurrency:
   group: mechanical-history-builder
