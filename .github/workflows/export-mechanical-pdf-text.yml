@@ -1,0 +1,76 @@
+name: Export official mechanical PDF text
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/export-mechanical-pdf-text.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: read
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install requests pymupdf
+      - name: Download official PDFs and export page text
+        run: |
+          mkdir -p generated/mechanical-pdf-text
+          printf '%s\n' '${{ github.run_id }}' > generated/mechanical-pdf-text/RUN_ID.txt
+          python - <<'PY'
+          import json, requests, fitz, pathlib, time
+          books = [
+            ('2026','https://webdosya.csb.gov.tr/v2/yfk/2026/01/1-BF-202619011535-20260119155143.pdf'),
+            ('2025','https://webdosya.csb.gov.tr/db/yfk/icerikler/2025-yili-b-r-m-f-yatlari-200105_1007-20250120090000.pdf'),
+            ('2024','https://webdosya.csb.gov.tr/db/yfk/icerikler/1--2024-b-r-m-f-yatlar-20240603-1019-20240603093641.pdf'),
+            ('2023-2','https://webdosya.csb.gov.tr/db/yfk/icerikler/2023-2-birim-fiyatlar-170723-20230717105538.pdf'),
+            ('2023-1','https://webdosya.csb.gov.tr/db/yfk/icerikler/2023-b-r-m-f-yatlar--1-20230130125553-20250114083046.pdf'),
+            ('2022-3','https://webdosya.csb.gov.tr/db/yfk/icerikler//bf-2022-3-turkce-20220907143000.pdf'),
+            ('2022-2','https://webdosya.csb.gov.tr/db/yfk/icerikler//bf-2022-2-turkce-20220907142858.pdf'),
+            ('2022-1','https://webdosya.csb.gov.tr/db/yfk/icerikler//bf-2022-1-turkce-20220907142750.pdf'),
+            ('2021','https://webdosya.csb.gov.tr/db/yfk/icerikler/bf-2021-turkce-20210809122111-20241015131501.pdf'),
+            ('2020','https://webdosya.csb.gov.tr/db/yfk/icerikler/-nsaat-b-r-m-f-yatlar--2020-turkce-20200207124629-20241015132829.pdf'),
+            ('2019','https://webdosya.csb.gov.tr/db/yfk/icerikler/-nsaat-b-r-m-f-yatlar--2019-turkce-20241015133030.pdf'),
+            ('2018','https://webdosya.csb.gov.tr/db/yfk/icerikler/b-r-m-f-yat-2018-20190415145232-20241016085909.pdf'),
+            ('2017','https://webdosya.csb.gov.tr/db/yfk/icerikler/b-r-m-f-yat-2017-20190417082219-20241016090611.pdf'),
+          ]
+          out = pathlib.Path('generated/mechanical-pdf-text')
+          manifest=[]
+          headers={'User-Agent':'Mozilla/5.0 BYSAY one-time official archive extraction'}
+          for label,url in books:
+              item={'period':label.replace('-', '/'),'url':url,'status':'pending','pages':0}
+              try:
+                  r=requests.get(url,headers=headers,timeout=180); r.raise_for_status()
+                  doc=fitz.open(stream=r.content,filetype='pdf')
+                  item['pages']=doc.page_count
+                  path=out/f'{label}.txt'
+                  with path.open('w',encoding='utf-8') as f:
+                      for i,page in enumerate(doc):
+                          f.write(f'\n<<<PAGE {i+1}>>>\n')
+                          f.write(page.get_text('text',sort=True) or '')
+                  item['status']='ok'
+              except Exception as exc:
+                  item['status']='error'; item['error']=str(exc)
+              manifest.append(item)
+              print(item, flush=True)
+          (out/'manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2),encoding='utf-8')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mechanical-pdf-text-2017-2026
+          path: generated/mechanical-pdf-text
+          retention-days: 3
+      - name: Commit run id
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add generated/mechanical-pdf-text/RUN_ID.txt
+          git commit -m "Record mechanical PDF text export run" || exit 0
+          git push
