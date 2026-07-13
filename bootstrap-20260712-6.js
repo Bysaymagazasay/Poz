@@ -1,6 +1,6 @@
 (() => {
   'use strict';
-  const VERSION = '20260712-29';
+  const VERSION = '20260713-30';
   const NEXT_STAGE = 'DSI';
   const loadScript = source => new Promise((resolve,reject)=>{const s=document.createElement('script');s.src=source;s.onload=resolve;s.onerror=()=>reject(new Error(`Program dosyası yüklenemedi: ${source}`));document.body.appendChild(s);});
   const normalizePoz = value => String(value ?? '').trim().toUpperCase().replace(/\s+/g,'').replace(/[–—−]/g,'-');
