@@ -36,6 +36,7 @@ jobs:
         continue-on-error: true
         run: |
           mkdir -p generated/mechanical-history
+          echo "Build started at $(date -u +%FT%TZ)"
           python scripts/build_mechanical_history.py 2>&1 | tee generated/mechanical-history/build.log
           echo "exit_code=${PIPESTATUS[0]}" >> "$GITHUB_OUTPUT"
 
