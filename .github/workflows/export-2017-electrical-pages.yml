@@ -1,0 +1,49 @@
+name: One-time export 2017 electrical PDF pages
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/export-2017-electrical-pages.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: read
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install requests pymupdf
+      - name: Download official 2017 PDF and extract likely electrical pages
+        run: |
+          mkdir -p generated/2017-electrical-export
+          printf '%s\n' '${{ github.run_id }}' > generated/2017-electrical-export/RUN_ID.txt
+          python - <<'PY'
+          import json, requests, fitz, pathlib
+          url='https://webdosya.csb.gov.tr/db/yfk/icerikler/b-r-m-f-yat-2017-20190417082219-20241016090611.pdf'
+          r=requests.get(url,headers={'User-Agent':'Mozilla/5.0 BYSAY one-time official archive extraction'},timeout=240)
+          r.raise_for_status()
+          src=fitz.open(stream=r.content,filetype='pdf')
+          out=fitz.open()
+          first,last=470,src.page_count
+          out.insert_pdf(src,from_page=first-1,to_page=last-1)
+          out_path=pathlib.Path('generated/2017-electrical-export/2017-electrical-pages.pdf')
+          out.save(out_path,garbage=4,deflate=True)
+          pathlib.Path('generated/2017-electrical-export/manifest.json').write_text(json.dumps({'url':url,'source_pages':src.page_count,'from_pdf_page':first,'to_pdf_page':last,'output_pages':out.page_count,'bytes':out_path.stat().st_size},ensure_ascii=False,indent=2),encoding='utf-8')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: one-time-2017-electrical-pdf
+          path: generated/2017-electrical-export
+          retention-days: 1
+      - name: Commit run id
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add generated/2017-electrical-export/RUN_ID.txt
+          git commit -m "Record one-time 2017 electrical PDF export" || exit 0
+          git push
