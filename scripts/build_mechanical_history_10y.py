@@ -2,12 +2,14 @@
 from __future__ import annotations
 
 import importlib.util
+import sys
 from pathlib import Path
 
 BASE_PATH = Path(__file__).with_name('build_mechanical_history.py')
 spec = importlib.util.spec_from_file_location('mechanical_history_base', BASE_PATH)
-base = importlib.util.module_from_spec(spec)
 assert spec and spec.loader
+base = importlib.util.module_from_spec(spec)
+sys.modules[spec.name] = base
 spec.loader.exec_module(base)
 
 ORIGINAL_COLLECT = base.collect_sources
