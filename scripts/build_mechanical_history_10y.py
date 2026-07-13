@@ -3,7 +3,6 @@ from __future__ import annotations
 
 import importlib.util
 import json
-import re
 import sys
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import asdict
@@ -17,23 +16,35 @@ base = importlib.util.module_from_spec(spec)
 sys.modules[spec.name] = base
 spec.loader.exec_module(base)
 
-ORIGINAL_COLLECT = base.collect_sources
 base.OUT_DIR = Path('generated/mechanical-history-2017-2026')
 base.CACHE_DIR = Path('.cache/mechanical-history-2017-2026')
-base.TIMEOUT = 60
+base.TIMEOUT = 90
 
+PRICE_BOOKS = [
+    ('2026', 'https://webdosya.csb.gov.tr/v2/yfk/2026/01/1-BF-202619011535-20260119155143.pdf'),
+    ('2025', 'https://webdosya.csb.gov.tr/db/yfk/icerikler/2025-yili-b-r-m-f-yatlari-200105_1007-20250120090000.pdf'),
+    ('2024', 'https://webdosya.csb.gov.tr/db/yfk/icerikler/1--2024-b-r-m-f-yatlar-20240603-1019-20240603093641.pdf'),
+    ('2023/2', 'https://webdosya.csb.gov.tr/db/yfk/icerikler/2023-2-birim-fiyatlar-170723-20230717105538.pdf'),
+    ('2023/1', 'https://webdosya.csb.gov.tr/db/yfk/icerikler/2023-b-r-m-f-yatlar--1-20230130125553-20250114083046.pdf'),
+    ('2022/3', 'https://webdosya.csb.gov.tr/db/yfk/icerikler//bf-2022-3-turkce-20220907143000.pdf'),
+    ('2022/2', 'https://webdosya.csb.gov.tr/db/yfk/icerikler//bf-2022-2-turkce-20220907142858.pdf'),
+    ('2022/1', 'https://webdosya.csb.gov.tr/db/yfk/icerikler//bf-2022-1-turkce-20220907142750.pdf'),
+    ('2021', 'https://webdosya.csb.gov.tr/db/yfk/icerikler/bf-2021-turkce-20210809122111-20241015131501.pdf'),
+    ('2020', 'https://webdosya.csb.gov.tr/db/yfk/icerikler/-nsaat-b-r-m-f-yatlar--2020-turkce-20200207124629-20241015132829.pdf'),
+    ('2019', 'https://webdosya.csb.gov.tr/db/yfk/icerikler/-nsaat-b-r-m-f-yatlar--2019-turkce-20241015133030.pdf'),
+    ('2018', 'https://webdosya.csb.gov.tr/db/yfk/icerikler/b-r-m-f-yat-2018-20190415145232-20241016085909.pdf'),
+    ('2017', 'https://webdosya.csb.gov.tr/db/yfk/icerikler/b-r-m-f-yat-2017-20190417082219-20241016090611.pdf'),
+]
 
-def year_of(label: str) -> int:
-    match = re.search(r'(19\d{2}|20\d{2})', str(label or ''))
-    return int(match.group(1)) if match else 0
+CODE_MAPS = [
+    ('2026', 'https://webdosya.csb.gov.tr/v2/yfk/2026/02/de-i-en-0302261018-20260204093427.pdf'),
+    ('2025', 'https://webdosya.csb.gov.tr/db/yfk/icerikler/deg-sen-2025-20250128140311.pdf'),
+]
 
 
 def collect_sources_10y():
-    price_sources, mapping_sources = ORIGINAL_COLLECT()
-    price_sources = [source for source in price_sources if 2017 <= year_of(source.period) <= 2026]
-    mapping_sources = [source for source in mapping_sources if 2017 <= year_of(source.period) <= 2026]
-    price_sources.sort(key=lambda source: base.period_sort_key(source.period), reverse=True)
-    mapping_sources.sort(key=lambda source: base.period_sort_key(source.period), reverse=True)
+    price_sources = [base.Source(period=period, url=url) for period, url in PRICE_BOOKS]
+    mapping_sources = [base.Source(period=period, url=url, kind='code_map') for period, url in CODE_MAPS]
     return price_sources, mapping_sources
 
 
@@ -78,10 +89,10 @@ def parse_mappings_parallel(sources):
 def main() -> int:
     base.OUT_DIR.mkdir(parents=True, exist_ok=True)
     sources, mapping_sources = collect_sources_10y()
-    print(f'2017-2026 kapsamında {len(sources)} fiyat kitabı ve {len(mapping_sources)} kod değişiklik belgesi bulundu.', flush=True)
+    print(f'2017-2026 kapsamında {len(sources)} resmî fiyat kitabı ve {len(mapping_sources)} resmî kod değişiklik belgesi işlenecek.', flush=True)
 
     history = parse_prices_parallel(sources)
-    mappings = parse_mappings_parallel(mapping_sources) if mapping_sources else []
+    mappings = parse_mappings_parallel(mapping_sources)
 
     dedup = {}
     for row in history:
