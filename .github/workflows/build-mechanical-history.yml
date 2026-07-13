@@ -1,11 +1,11 @@
-name: Build official mechanical price history (2017-2026)
+name: Build official mechanical price history
 
 on:
   push:
     branches: [main]
     paths:
       - 'scripts/build_mechanical_history.py'
-      - 'scripts/build_mechanical_history_last10.py'
+      - 'scripts/build_mechanical_history_10y.py'
       - '.github/workflows/build-mechanical-history.yml'
   workflow_dispatch:
 
@@ -32,22 +32,22 @@ jobs:
       - name: Install parser dependencies
         run: pip install requests beautifulsoup4 pymupdf
 
-      - name: Download and parse official YFK books for 2017-2026
+      - name: Download and parse official YFK archive for 2017-2026
         id: parse
         continue-on-error: true
         run: |
-          mkdir -p generated/mechanical-history
+          mkdir -p generated/mechanical-history-2017-2026
           echo "Build started at $(date -u +%FT%TZ)"
-          python scripts/build_mechanical_history_last10.py 2>&1 | tee generated/mechanical-history/build.log
+          python scripts/build_mechanical_history_10y.py 2>&1 | tee generated/mechanical-history-2017-2026/build.log
           echo "exit_code=${PIPESTATUS[0]}" >> "$GITHUB_OUTPUT"
 
       - name: Write failure marker when needed
         if: always()
         run: |
           if [ "${{ steps.parse.outputs.exit_code }}" != "0" ]; then
-            printf 'Parser exit code: %s\nRun: %s\n' '${{ steps.parse.outputs.exit_code }}' '${{ github.run_id }}' > generated/mechanical-history/BUILD_FAILED.txt
+            printf 'Parser exit code: %s\nRun: %s\n' '${{ steps.parse.outputs.exit_code }}' '${{ github.run_id }}' > generated/mechanical-history-2017-2026/BUILD_FAILED.txt
           else
-            rm -f generated/mechanical-history/BUILD_FAILED.txt
+            rm -f generated/mechanical-history-2017-2026/BUILD_FAILED.txt
           fi
 
       - name: Commit generated CSV files
@@ -55,10 +55,10 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add generated/mechanical-history
+          git add generated/mechanical-history-2017-2026
           if git diff --cached --quiet; then
             echo "No generated changes"
             exit 0
           fi
-          git commit -m "Generate official mechanical price history 2017-2026"
+          git commit -m "Generate 2017-2026 mechanical price history"
           git push
