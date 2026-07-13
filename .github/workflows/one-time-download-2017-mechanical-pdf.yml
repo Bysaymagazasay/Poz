@@ -1,0 +1,49 @@
+name: One-time export 2017 mechanical PDF pages
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/one-time-download-2017-mechanical-pdf.yml'
+permissions:
+  contents: write
+  actions: read
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install requests pymupdf
+      - name: Download and crop official 2017 mechanical pages
+        run: |
+          mkdir -p generated/one-time-2017-pdf
+          printf '%s\n' '${{ github.run_id }}' > generated/one-time-2017-pdf/RUN_ID.txt
+          python - <<'PY'
+          import requests, fitz, pathlib, json
+          url='https://webdosya.csb.gov.tr/db/yfk/icerikler/b-r-m-f-yat-2017-20190417082219-20241016090611.pdf'
+          r=requests.get(url,headers={'User-Agent':'Mozilla/5.0 BYSAY one-time official archive extraction'},timeout=240)
+          r.raise_for_status()
+          src=fitz.open(stream=r.content,filetype='pdf')
+          # Mechanical installation books occupy PDF pages 245-493 (printed 236-484), as in the official contents.
+          out=fitz.open()
+          out.insert_pdf(src,from_page=244,to_page=min(492,src.page_count-1))
+          target=pathlib.Path('generated/one-time-2017-pdf/2017-mechanical-pages.pdf')
+          out.save(target,garbage=4,deflate=True,clean=True)
+          pathlib.Path('generated/one-time-2017-pdf/manifest.json').write_text(json.dumps({'url':url,'source_pages':src.page_count,'from_pdf_page':245,'to_pdf_page':min(493,src.page_count),'output_pages':out.page_count,'bytes':target.stat().st_size},indent=2),encoding='utf-8')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: one-time-2017-mechanical-pdf
+          path: generated/one-time-2017-pdf
+          retention-days: 1
+      - name: Commit run id
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add generated/one-time-2017-pdf/RUN_ID.txt generated/one-time-2017-pdf/manifest.json
+          git commit -m "Record one-time 2017 mechanical PDF export" || exit 0
+          git pull --rebase
+          git push
