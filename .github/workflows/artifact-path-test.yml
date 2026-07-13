@@ -1,0 +1,32 @@
+name: Artifact path test
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/artifact-path-test.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Write test file
+        run: |
+          mkdir -p generated/artifact-test
+          printf '%s\n' '${{ github.run_id }}' > generated/artifact-test/RUN_ID.txt
+          printf 'artifact handoff test\n' > generated/artifact-test/test.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: artifact-path-test
+          path: generated/artifact-test
+          retention-days: 1
+      - name: Commit run id
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add generated/artifact-test
+          git commit -m "Record artifact test run" || exit 0
+          git push
