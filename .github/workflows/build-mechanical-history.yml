@@ -1,10 +1,11 @@
-name: Build official mechanical price history
+name: Build official mechanical price history (2017-2026)
 
 on:
   push:
     branches: [main]
     paths:
       - 'scripts/build_mechanical_history.py'
+      - 'scripts/build_mechanical_history_last10.py'
       - '.github/workflows/build-mechanical-history.yml'
   workflow_dispatch:
 
@@ -31,13 +32,13 @@ jobs:
       - name: Install parser dependencies
         run: pip install requests beautifulsoup4 pymupdf
 
-      - name: Download and parse official YFK archive
+      - name: Download and parse official YFK books for 2017-2026
         id: parse
         continue-on-error: true
         run: |
           mkdir -p generated/mechanical-history
           echo "Build started at $(date -u +%FT%TZ)"
-          python scripts/build_mechanical_history.py 2>&1 | tee generated/mechanical-history/build.log
+          python scripts/build_mechanical_history_last10.py 2>&1 | tee generated/mechanical-history/build.log
           echo "exit_code=${PIPESTATUS[0]}" >> "$GITHUB_OUTPUT"
 
       - name: Write failure marker when needed
@@ -59,5 +60,5 @@ jobs:
             echo "No generated changes"
             exit 0
           fi
-          git commit -m "Generate official mechanical price history"
+          git commit -m "Generate official mechanical price history 2017-2026"
           git push
