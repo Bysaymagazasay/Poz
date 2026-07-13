@@ -15,7 +15,7 @@ permissions:
 
 concurrency:
   group: mechanical-history-builder
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   build:
