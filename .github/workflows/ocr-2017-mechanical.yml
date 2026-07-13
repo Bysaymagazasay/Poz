@@ -1,0 +1,68 @@
+name: OCR 2017 mechanical price pages
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/ocr-2017-mechanical.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: read
+jobs:
+  ocr:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install OCR dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y tesseract-ocr tesseract-ocr-tur
+          pip install requests pymupdf pytesseract pillow
+      - name: OCR likely mechanical section
+        run: |
+          mkdir -p generated/mechanical-2017-ocr
+          printf '%s\n' '${{ github.run_id }}' > generated/mechanical-2017-ocr/RUN_ID.txt
+          python - <<'PY'
+          import io, json, pathlib, requests, fitz, pytesseract
+          from PIL import Image
+          from concurrent.futures import ThreadPoolExecutor, as_completed
+          url='https://webdosya.csb.gov.tr/db/yfk/icerikler/b-r-m-f-yat-2017-20190417082219-20241016090611.pdf'
+          r=requests.get(url,headers={'User-Agent':'Mozilla/5.0 BYSAY one-time archive OCR'},timeout=240); r.raise_for_status()
+          doc=fitz.open(stream=r.content,filetype='pdf')
+          first,last=235,min(515,doc.page_count)
+          out=pathlib.Path('generated/mechanical-2017-ocr')
+          def one(index):
+              page=doc[index]
+              pix=page.get_pixmap(matrix=fitz.Matrix(1.7,1.7),alpha=False,colorspace=fitz.csGRAY)
+              image=Image.open(io.BytesIO(pix.tobytes('png')))
+              text=pytesseract.image_to_string(image,lang='tur',config='--psm 6')
+              return index+1,text
+          results={}
+          with ThreadPoolExecutor(max_workers=4) as ex:
+              futures=[ex.submit(one,i) for i in range(first-1,last)]
+              for n,f in enumerate(as_completed(futures),1):
+                  p,t=f.result(); results[p]=t
+                  if n%20==0: print(f'{n}/{len(futures)}',flush=True)
+          with (out/'2017-ocr.txt').open('w',encoding='utf-8') as f:
+              for p in sorted(results):
+                  f.write(f'\n<<<PAGE {p}>>>\n{results[p]}')
+          (out/'manifest.json').write_text(json.dumps({'url':url,'pdf_pages':doc.page_count,'ocr_first_page':first,'ocr_last_page':last,'ocr_pages':len(results)},ensure_ascii=False,indent=2),encoding='utf-8')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mechanical-2017-ocr
+          path: generated/mechanical-2017-ocr
+          retention-days: 3
+      - name: Commit run id
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add generated/mechanical-2017-ocr/RUN_ID.txt
+          git commit -m "Record 2017 mechanical OCR run" || exit 0
+          git push
