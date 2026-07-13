@@ -1,0 +1,28 @@
+name: Report mechanical build status
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/report-mechanical-build-status.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: read
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Query latest build runs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p generated/mechanical-build-status
+          gh api 'repos/${{ github.repository }}/actions/workflows/build-mechanical-history.yml/runs?per_page=10' > generated/mechanical-build-status/runs.json
+      - name: Commit status
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add generated/mechanical-build-status/runs.json
+          git commit -m "Report mechanical build status" || exit 0
+          git push
