@@ -12,6 +12,8 @@ on:
 permissions:
   contents: write
 
+actions: read
+
 concurrency:
   group: mechanical-history-builder
   cancel-in-progress: false
@@ -37,6 +39,7 @@ jobs:
         continue-on-error: true
         run: |
           mkdir -p generated/mechanical-history-2017-2026
+          printf '%s\n' '${{ github.run_id }}' > generated/mechanical-history-2017-2026/RUN_ID.txt
           echo "Build started at $(date -u +%FT%TZ)"
           python scripts/build_mechanical_history_10y.py 2>&1 | tee generated/mechanical-history-2017-2026/build.log
           echo "exit_code=${PIPESTATUS[0]}" >> "$GITHUB_OUTPUT"
@@ -49,6 +52,15 @@ jobs:
           else
             rm -f generated/mechanical-history-2017-2026/BUILD_FAILED.txt
           fi
+
+      - name: Upload generated data
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mechanical-history-2017-2026
+          path: generated/mechanical-history-2017-2026
+          if-no-files-found: error
+          retention-days: 7
 
       - name: Commit generated CSV files
         if: always()
