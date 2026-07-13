@@ -1,1 +1,726 @@
-{"schemaVersion":1,"indexName":"TÜİK İnşaat Maliyet Endeksi","method":"Eski yıllık birim fiyatlar için kaynak yıl Ocak endeksi; hedef için yayımlanmış en son aylık endeks kullanılır.","officialSource":"Türkiye İstatistik Kurumu (TÜİK)","mirrorSource":"https://www.hakedis.org/endeksler/insaat-maliyet-endeksi-ve-degisim-orani","sourceNote":"Hakediş.org tablosu verilerin güncel olarak TÜİK sitesinden alındığını belirtir.","updatedAt":"2026-07-12T00:00:00+03:00","latest":{"year":2026,"month":5,"monthName":"Mayıs","index":2412.77},"years":{"2015":[{"month":1,"monthName":"Ocak","index":97.13},{"month":2,"monthName":"Şubat","index":97.65},{"month":3,"monthName":"Mart","index":98.27},{"month":4,"monthName":"Nisan","index":99.14},{"month":5,"monthName":"Mayıs","index":100.17},{"month":6,"monthName":"Haziran","index":100.03},{"month":7,"monthName":"Temmuz","index":100.83},{"month":8,"monthName":"Ağustos","index":101.35},{"month":9,"monthName":"Eylül","index":102.25},{"month":10,"monthName":"Ekim","index":101.56},{"month":11,"monthName":"Kasım","index":101.01},{"month":12,"monthName":"Aralık","index":100.6}],"2016":[{"month":1,"monthName":"Ocak","index":108.19},{"month":2,"monthName":"Şubat","index":108.12},{"month":3,"monthName":"Mart","index":109.39},{"month":4,"monthName":"Nisan","index":110.26},{"month":5,"monthName":"Mayıs","index":112.11},{"month":6,"monthName":"Haziran","index":111.6},{"month":7,"monthName":"Temmuz","index":111.52},{"month":8,"monthName":"Ağustos","index":111.9},{"month":9,"monthName":"Eylül","index":112.19},{"month":10,"monthName":"Ekim","index":113.06},{"month":11,"monthName":"Kasım","index":115.83},{"month":12,"monthName":"Aralık","index":118.9}],"2017":[{"month":1,"monthName":"Ocak","index":124.69},{"month":2,"monthName":"Şubat","index":125.09},{"month":3,"monthName":"Mart","index":126.43},{"month":4,"monthName":"Nisan","index":126.84},{"month":5,"monthName":"Mayıs","index":127.26},{"month":6,"monthName":"Haziran","index":127.06},{"month":7,"monthName":"Temmuz","index":128.16},{"month":8,"monthName":"Ağustos","index":129.51},{"month":9,"monthName":"Eylül","index":130.94},{"month":10,"monthName":"Ekim","index":132.76},{"month":11,"monthName":"Kasım","index":136.09},{"month":12,"monthName":"Aralık","index":138.14}],"2018":[{"month":1,"monthName":"Ocak","index":144.92},{"month":2,"monthName":"Şubat","index":146.6},{"month":3,"monthName":"Mart","index":149.08},{"month":4,"monthName":"Nisan","index":152.1},{"month":5,"monthName":"Mayıs","index":156.58},{"month":6,"monthName":"Haziran","index":160.17},{"month":7,"monthName":"Temmuz","index":162.78},{"month":8,"monthName":"Ağustos","index":172.71},{"month":9,"monthName":"Eylül","index":182.87},{"month":10,"monthName":"Ekim","index":182.57},{"month":11,"monthName":"Kasım","index":176.85},{"month":12,"monthName":"Aralık","index":173.57}],"2019":[{"month":1,"monthName":"Ocak","index":184.83},{"month":2,"monthName":"Şubat","index":186.51},{"month":3,"monthName":"Mart","index":189.25},{"month":4,"monthName":"Nisan","index":192.27},{"month":5,"monthName":"Mayıs","index":195.51},{"month":6,"monthName":"Haziran","index":193.97},{"month":7,"monthName":"Temmuz","index":192.76},{"month":8,"monthName":"Ağustos","index":191.35},{"month":9,"monthName":"Eylül","index":190.23},{"month":10,"monthName":"Ekim","index":190.36},{"month":11,"monthName":"Kasım","index":190.32},{"month":12,"monthName":"Aralık","index":192.25}],"2020":[{"month":1,"monthName":"Ocak","index":202.04},{"month":2,"monthName":"Şubat","index":202.34},{"month":3,"monthName":"Mart","index":202.34},{"month":4,"monthName":"Nisan","index":204.08},{"month":5,"monthName":"Mayıs","index":206.85},{"month":6,"monthName":"Haziran","index":208.46},{"month":7,"monthName":"Temmuz","index":210.43},{"month":8,"monthName":"Ağustos","index":216.3},{"month":9,"monthName":"Eylül","index":220.87},{"month":10,"monthName":"Ekim","index":227.47},{"month":11,"monthName":"Kasım","index":234.07},{"month":12,"monthName":"Aralık","index":240.35}],"2021":[{"month":1,"monthName":"Ocak","index":258.24},{"month":2,"monthName":"Şubat","index":258.16},{"month":3,"monthName":"Mart","index":267.03},{"month":4,"monthName":"Nisan","index":276.48},{"month":5,"monthName":"Mayıs","index":288.67},{"month":6,"monthName":"Haziran","index":297.02},{"month":7,"monthName":"Temmuz","index":304.61},{"month":8,"monthName":"Ağustos","index":307.43},{"month":9,"monthName":"Eylül","index":308.2},{"month":10,"monthName":"Ekim","index":322.84},{"month":11,"monthName":"Kasım","index":348.46},{"month":12,"monthName":"Aralık","index":403.16}],"2022":[{"month":1,"monthName":"Ocak","index":464.6},{"month":2,"monthName":"Şubat","index":491.2},{"month":3,"monthName":"Mart","index":538.26},{"month":4,"monthName":"Nisan","index":571.22},{"month":5,"monthName":"Mayıs","index":593.87},{"month":6,"monthName":"Haziran","index":614.46},{"month":7,"monthName":"Temmuz","index":654.13},{"month":8,"monthName":"Ağustos","index":667.06},{"month":9,"monthName":"Eylül","index":677.52},{"month":10,"monthName":"Ekim","index":700.8},{"month":11,"monthName":"Kasım","index":709.02},{"month":12,"monthName":"Aralık","index":719.25}],"2023":[{"month":1,"monthName":"Ocak","index":829.42},{"month":2,"monthName":"Şubat","index":846.7},{"month":3,"monthName":"Mart","index":864.96},{"month":4,"monthName":"Nisan","index":873.91},{"month":5,"monthName":"Mayıs","index":878.63},{"month":6,"monthName":"Haziran","index":917.53},{"month":7,"monthName":"Temmuz","index":1061.35},{"month":8,"monthName":"Ağustos","index":1110.41},{"month":9,"monthName":"Eylül","index":1137.77},{"month":10,"monthName":"Ekim","index":1162.84},{"month":11,"monthName":"Kasım","index":1180.47},{"month":12,"monthName":"Aralık","index":1203.41}],"2024":[{"month":1,"monthName":"Ocak","index":1392.33},{"month":2,"monthName":"Şubat","index":1439.85},{"month":3,"monthName":"Mart","index":1470.26},{"month":4,"monthName":"Nisan","index":1501.41},{"month":5,"monthName":"Mayıs","index":1518.13},{"month":6,"monthName":"Haziran","index":1524.19},{"month":7,"monthName":"Temmuz","index":1553.33},{"month":8,"monthName":"Ağustos","index":1571.62},{"month":9,"monthName":"Eylül","index":1580.65},{"month":10,"monthName":"Ekim","index":1604.06},{"month":11,"monthName":"Kasım","index":1604.64},{"month":12,"monthName":"Aralık","index":1615.82}],"2025":[{"month":1,"monthName":"Ocak","index":1762.81},{"month":2,"monthName":"Şubat","index":1784.6},{"month":3,"monthName":"Mart","index":1811.84},{"month":4,"monthName":"Nisan","index":1842.02},{"month":5,"monthName":"Mayıs","index":1858.21},{"month":6,"monthName":"Haziran","index":1883.65},{"month":7,"monthName":"Temmuz","index":1910.25},{"month":8,"monthName":"Ağustos","index":1930.24},{"month":9,"monthName":"Eylül","index":1947.06},{"month":10,"monthName":"Ekim","index":1966.06},{"month":11,"monthName":"Kasım","index":1988.57},{"month":12,"monthName":"Aralık","index":2011.76}],"2026":[{"month":1,"monthName":"Ocak","index":2210.24},{"month":2,"monthName":"Şubat","index":2243.55},{"month":3,"monthName":"Mart","index":2305.42},{"month":4,"monthName":"Nisan","index":2368.46},{"month":5,"monthName":"Mayıs","index":2412.77}]}}
+{
+  "schemaVersion": 1,
+  "indexName": "TÜİK İnşaat Maliyet Endeksi",
+  "method": "Eski yıllık birim fiyatlar için kaynak yıl Ocak endeksi; hedef için yayımlanmış en son aylık endeks kullanılır.",
+  "officialSource": "Türkiye İstatistik Kurumu (TÜİK)",
+  "mirrorSource": "https://www.hakedis.org/endeksler/insaat-maliyet-endeksi-ve-degisim-orani",
+  "sourceNote": "Hakediş.org tablosu verilerin güncel olarak TÜİK sitesinden alındığını belirtir.",
+  "updatedAt": "2026-07-13T13:09:48.464160+00:00",
+  "latest": {
+    "year": 2026,
+    "month": 5,
+    "monthName": "Mayıs",
+    "index": 2412.77
+  },
+  "years": {
+    "2015": [
+      {
+        "month": 1,
+        "monthName": "Ocak",
+        "index": 97.13
+      },
+      {
+        "month": 2,
+        "monthName": "Şubat",
+        "index": 97.65
+      },
+      {
+        "month": 3,
+        "monthName": "Mart",
+        "index": 98.27
+      },
+      {
+        "month": 4,
+        "monthName": "Nisan",
+        "index": 99.14
+      },
+      {
+        "month": 5,
+        "monthName": "Mayıs",
+        "index": 100.17
+      },
+      {
+        "month": 6,
+        "monthName": "Haziran",
+        "index": 100.03
+      },
+      {
+        "month": 7,
+        "monthName": "Temmuz",
+        "index": 100.83
+      },
+      {
+        "month": 8,
+        "monthName": "Ağustos",
+        "index": 101.35
+      },
+      {
+        "month": 9,
+        "monthName": "Eylül",
+        "index": 102.25
+      },
+      {
+        "month": 10,
+        "monthName": "Ekim",
+        "index": 101.56
+      },
+      {
+        "month": 11,
+        "monthName": "Kasım",
+        "index": 101.01
+      },
+      {
+        "month": 12,
+        "monthName": "Aralık",
+        "index": 100.6
+      }
+    ],
+    "2016": [
+      {
+        "month": 1,
+        "monthName": "Ocak",
+        "index": 108.19
+      },
+      {
+        "month": 2,
+        "monthName": "Şubat",
+        "index": 108.12
+      },
+      {
+        "month": 3,
+        "monthName": "Mart",
+        "index": 109.39
+      },
+      {
+        "month": 4,
+        "monthName": "Nisan",
+        "index": 110.26
+      },
+      {
+        "month": 5,
+        "monthName": "Mayıs",
+        "index": 112.11
+      },
+      {
+        "month": 6,
+        "monthName": "Haziran",
+        "index": 111.6
+      },
+      {
+        "month": 7,
+        "monthName": "Temmuz",
+        "index": 111.52
+      },
+      {
+        "month": 8,
+        "monthName": "Ağustos",
+        "index": 111.9
+      },
+      {
+        "month": 9,
+        "monthName": "Eylül",
+        "index": 112.19
+      },
+      {
+        "month": 10,
+        "monthName": "Ekim",
+        "index": 113.06
+      },
+      {
+        "month": 11,
+        "monthName": "Kasım",
+        "index": 115.83
+      },
+      {
+        "month": 12,
+        "monthName": "Aralık",
+        "index": 118.9
+      }
+    ],
+    "2017": [
+      {
+        "month": 1,
+        "monthName": "Ocak",
+        "index": 124.69
+      },
+      {
+        "month": 2,
+        "monthName": "Şubat",
+        "index": 125.09
+      },
+      {
+        "month": 3,
+        "monthName": "Mart",
+        "index": 126.43
+      },
+      {
+        "month": 4,
+        "monthName": "Nisan",
+        "index": 126.84
+      },
+      {
+        "month": 5,
+        "monthName": "Mayıs",
+        "index": 127.26
+      },
+      {
+        "month": 6,
+        "monthName": "Haziran",
+        "index": 127.06
+      },
+      {
+        "month": 7,
+        "monthName": "Temmuz",
+        "index": 128.16
+      },
+      {
+        "month": 8,
+        "monthName": "Ağustos",
+        "index": 129.51
+      },
+      {
+        "month": 9,
+        "monthName": "Eylül",
+        "index": 130.94
+      },
+      {
+        "month": 10,
+        "monthName": "Ekim",
+        "index": 132.76
+      },
+      {
+        "month": 11,
+        "monthName": "Kasım",
+        "index": 136.09
+      },
+      {
+        "month": 12,
+        "monthName": "Aralık",
+        "index": 138.14
+      }
+    ],
+    "2018": [
+      {
+        "month": 1,
+        "monthName": "Ocak",
+        "index": 144.92
+      },
+      {
+        "month": 2,
+        "monthName": "Şubat",
+        "index": 146.6
+      },
+      {
+        "month": 3,
+        "monthName": "Mart",
+        "index": 149.08
+      },
+      {
+        "month": 4,
+        "monthName": "Nisan",
+        "index": 152.1
+      },
+      {
+        "month": 5,
+        "monthName": "Mayıs",
+        "index": 156.58
+      },
+      {
+        "month": 6,
+        "monthName": "Haziran",
+        "index": 160.17
+      },
+      {
+        "month": 7,
+        "monthName": "Temmuz",
+        "index": 162.78
+      },
+      {
+        "month": 8,
+        "monthName": "Ağustos",
+        "index": 172.71
+      },
+      {
+        "month": 9,
+        "monthName": "Eylül",
+        "index": 182.87
+      },
+      {
+        "month": 10,
+        "monthName": "Ekim",
+        "index": 182.57
+      },
+      {
+        "month": 11,
+        "monthName": "Kasım",
+        "index": 176.85
+      },
+      {
+        "month": 12,
+        "monthName": "Aralık",
+        "index": 173.57
+      }
+    ],
+    "2019": [
+      {
+        "month": 1,
+        "monthName": "Ocak",
+        "index": 184.83
+      },
+      {
+        "month": 2,
+        "monthName": "Şubat",
+        "index": 186.51
+      },
+      {
+        "month": 3,
+        "monthName": "Mart",
+        "index": 189.25
+      },
+      {
+        "month": 4,
+        "monthName": "Nisan",
+        "index": 192.27
+      },
+      {
+        "month": 5,
+        "monthName": "Mayıs",
+        "index": 195.51
+      },
+      {
+        "month": 6,
+        "monthName": "Haziran",
+        "index": 193.97
+      },
+      {
+        "month": 7,
+        "monthName": "Temmuz",
+        "index": 192.76
+      },
+      {
+        "month": 8,
+        "monthName": "Ağustos",
+        "index": 191.35
+      },
+      {
+        "month": 9,
+        "monthName": "Eylül",
+        "index": 190.23
+      },
+      {
+        "month": 10,
+        "monthName": "Ekim",
+        "index": 190.36
+      },
+      {
+        "month": 11,
+        "monthName": "Kasım",
+        "index": 190.32
+      },
+      {
+        "month": 12,
+        "monthName": "Aralık",
+        "index": 192.25
+      }
+    ],
+    "2020": [
+      {
+        "month": 1,
+        "monthName": "Ocak",
+        "index": 202.04
+      },
+      {
+        "month": 2,
+        "monthName": "Şubat",
+        "index": 202.34
+      },
+      {
+        "month": 3,
+        "monthName": "Mart",
+        "index": 202.34
+      },
+      {
+        "month": 4,
+        "monthName": "Nisan",
+        "index": 204.08
+      },
+      {
+        "month": 5,
+        "monthName": "Mayıs",
+        "index": 206.85
+      },
+      {
+        "month": 6,
+        "monthName": "Haziran",
+        "index": 208.46
+      },
+      {
+        "month": 7,
+        "monthName": "Temmuz",
+        "index": 210.43
+      },
+      {
+        "month": 8,
+        "monthName": "Ağustos",
+        "index": 216.3
+      },
+      {
+        "month": 9,
+        "monthName": "Eylül",
+        "index": 220.87
+      },
+      {
+        "month": 10,
+        "monthName": "Ekim",
+        "index": 227.47
+      },
+      {
+        "month": 11,
+        "monthName": "Kasım",
+        "index": 234.07
+      },
+      {
+        "month": 12,
+        "monthName": "Aralık",
+        "index": 240.35
+      }
+    ],
+    "2021": [
+      {
+        "month": 1,
+        "monthName": "Ocak",
+        "index": 258.24
+      },
+      {
+        "month": 2,
+        "monthName": "Şubat",
+        "index": 258.16
+      },
+      {
+        "month": 3,
+        "monthName": "Mart",
+        "index": 267.03
+      },
+      {
+        "month": 4,
+        "monthName": "Nisan",
+        "index": 276.48
+      },
+      {
+        "month": 5,
+        "monthName": "Mayıs",
+        "index": 288.67
+      },
+      {
+        "month": 6,
+        "monthName": "Haziran",
+        "index": 297.02
+      },
+      {
+        "month": 7,
+        "monthName": "Temmuz",
+        "index": 304.61
+      },
+      {
+        "month": 8,
+        "monthName": "Ağustos",
+        "index": 307.43
+      },
+      {
+        "month": 9,
+        "monthName": "Eylül",
+        "index": 308.2
+      },
+      {
+        "month": 10,
+        "monthName": "Ekim",
+        "index": 322.84
+      },
+      {
+        "month": 11,
+        "monthName": "Kasım",
+        "index": 348.46
+      },
+      {
+        "month": 12,
+        "monthName": "Aralık",
+        "index": 403.16
+      }
+    ],
+    "2022": [
+      {
+        "month": 1,
+        "monthName": "Ocak",
+        "index": 464.6
+      },
+      {
+        "month": 2,
+        "monthName": "Şubat",
+        "index": 491.2
+      },
+      {
+        "month": 3,
+        "monthName": "Mart",
+        "index": 538.26
+      },
+      {
+        "month": 4,
+        "monthName": "Nisan",
+        "index": 571.22
+      },
+      {
+        "month": 5,
+        "monthName": "Mayıs",
+        "index": 593.87
+      },
+      {
+        "month": 6,
+        "monthName": "Haziran",
+        "index": 614.46
+      },
+      {
+        "month": 7,
+        "monthName": "Temmuz",
+        "index": 654.13
+      },
+      {
+        "month": 8,
+        "monthName": "Ağustos",
+        "index": 667.06
+      },
+      {
+        "month": 9,
+        "monthName": "Eylül",
+        "index": 677.52
+      },
+      {
+        "month": 10,
+        "monthName": "Ekim",
+        "index": 700.8
+      },
+      {
+        "month": 11,
+        "monthName": "Kasım",
+        "index": 709.02
+      },
+      {
+        "month": 12,
+        "monthName": "Aralık",
+        "index": 719.25
+      }
+    ],
+    "2023": [
+      {
+        "month": 1,
+        "monthName": "Ocak",
+        "index": 829.42
+      },
+      {
+        "month": 2,
+        "monthName": "Şubat",
+        "index": 846.7
+      },
+      {
+        "month": 3,
+        "monthName": "Mart",
+        "index": 864.96
+      },
+      {
+        "month": 4,
+        "monthName": "Nisan",
+        "index": 873.91
+      },
+      {
+        "month": 5,
+        "monthName": "Mayıs",
+        "index": 878.63
+      },
+      {
+        "month": 6,
+        "monthName": "Haziran",
+        "index": 917.53
+      },
+      {
+        "month": 7,
+        "monthName": "Temmuz",
+        "index": 1061.35
+      },
+      {
+        "month": 8,
+        "monthName": "Ağustos",
+        "index": 1110.41
+      },
+      {
+        "month": 9,
+        "monthName": "Eylül",
+        "index": 1137.77
+      },
+      {
+        "month": 10,
+        "monthName": "Ekim",
+        "index": 1162.84
+      },
+      {
+        "month": 11,
+        "monthName": "Kasım",
+        "index": 1180.47
+      },
+      {
+        "month": 12,
+        "monthName": "Aralık",
+        "index": 1203.41
+      }
+    ],
+    "2024": [
+      {
+        "month": 1,
+        "monthName": "Ocak",
+        "index": 1392.33
+      },
+      {
+        "month": 2,
+        "monthName": "Şubat",
+        "index": 1439.85
+      },
+      {
+        "month": 3,
+        "monthName": "Mart",
+        "index": 1470.26
+      },
+      {
+        "month": 4,
+        "monthName": "Nisan",
+        "index": 1501.41
+      },
+      {
+        "month": 5,
+        "monthName": "Mayıs",
+        "index": 1518.13
+      },
+      {
+        "month": 6,
+        "monthName": "Haziran",
+        "index": 1524.19
+      },
+      {
+        "month": 7,
+        "monthName": "Temmuz",
+        "index": 1553.33
+      },
+      {
+        "month": 8,
+        "monthName": "Ağustos",
+        "index": 1571.62
+      },
+      {
+        "month": 9,
+        "monthName": "Eylül",
+        "index": 1580.65
+      },
+      {
+        "month": 10,
+        "monthName": "Ekim",
+        "index": 1604.06
+      },
+      {
+        "month": 11,
+        "monthName": "Kasım",
+        "index": 1604.64
+      },
+      {
+        "month": 12,
+        "monthName": "Aralık",
+        "index": 1615.82
+      }
+    ],
+    "2025": [
+      {
+        "month": 1,
+        "monthName": "Ocak",
+        "index": 1762.81
+      },
+      {
+        "month": 2,
+        "monthName": "Şubat",
+        "index": 1784.6
+      },
+      {
+        "month": 3,
+        "monthName": "Mart",
+        "index": 1811.84
+      },
+      {
+        "month": 4,
+        "monthName": "Nisan",
+        "index": 1842.02
+      },
+      {
+        "month": 5,
+        "monthName": "Mayıs",
+        "index": 1858.21
+      },
+      {
+        "month": 6,
+        "monthName": "Haziran",
+        "index": 1883.65
+      },
+      {
+        "month": 7,
+        "monthName": "Temmuz",
+        "index": 1910.25
+      },
+      {
+        "month": 8,
+        "monthName": "Ağustos",
+        "index": 1930.24
+      },
+      {
+        "month": 9,
+        "monthName": "Eylül",
+        "index": 1947.06
+      },
+      {
+        "month": 10,
+        "monthName": "Ekim",
+        "index": 1966.06
+      },
+      {
+        "month": 11,
+        "monthName": "Kasım",
+        "index": 1988.57
+      },
+      {
+        "month": 12,
+        "monthName": "Aralık",
+        "index": 2011.76
+      }
+    ],
+    "2026": [
+      {
+        "month": 1,
+        "monthName": "Ocak",
+        "index": 2210.24
+      },
+      {
+        "month": 2,
+        "monthName": "Şubat",
+        "index": 2243.55
+      },
+      {
+        "month": 3,
+        "monthName": "Mart",
+        "index": 2305.42
+      },
+      {
+        "month": 4,
+        "monthName": "Nisan",
+        "index": 2368.46
+      },
+      {
+        "month": 5,
+        "monthName": "Mayıs",
+        "index": 2412.77
+      }
+    ]
+  }
+}
