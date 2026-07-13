@@ -1,0 +1,62 @@
+name: Build official mechanical price history
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/build_mechanical_history.py'
+      - '.github/workflows/build-mechanical-history.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: mechanical-history-builder
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install parser dependencies
+        run: pip install requests beautifulsoup4 pymupdf
+
+      - name: Download and parse official YFK archive
+        id: parse
+        continue-on-error: true
+        run: |
+          mkdir -p generated/mechanical-history
+          python scripts/build_mechanical_history.py 2>&1 | tee generated/mechanical-history/build.log
+          echo "exit_code=${PIPESTATUS[0]}" >> "$GITHUB_OUTPUT"
+
+      - name: Write failure marker when needed
+        if: always()
+        run: |
+          if [ "${{ steps.parse.outputs.exit_code }}" != "0" ]; then
+            printf 'Parser exit code: %s\nRun: %s\n' '${{ steps.parse.outputs.exit_code }}' '${{ github.run_id }}' > generated/mechanical-history/BUILD_FAILED.txt
+          else
+            rm -f generated/mechanical-history/BUILD_FAILED.txt
+          fi
+
+      - name: Commit generated CSV files
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add generated/mechanical-history
+          if git diff --cached --quiet; then
+            echo "No generated changes"
+            exit 0
+          fi
+          git commit -m "Generate official mechanical price history"
+          git push
