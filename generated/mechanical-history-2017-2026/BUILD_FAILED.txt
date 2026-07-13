@@ -1,2 +1,3 @@
-Parser exit code: 1
-Run: 29226911116
+Parser exit code: 2
+Excel exit code: 1
+Run: 29230828285

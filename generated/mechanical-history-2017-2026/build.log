@@ -1,21 +1,17 @@
-Traceback (most recent call last):
-  File "/home/runner/work/Poz/Poz/scripts/build_mechanical_history_10y.py", line 11, in <module>
-    spec.loader.exec_module(base)
-  File "<frozen importlib._bootstrap_external>", line 999, in exec_module
-  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
-  File "/home/runner/work/Poz/Poz/scripts/build_mechanical_history.py", line 110, in <module>
-    @dataclass
-     ^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/dataclasses.py", line 1275, in dataclass
-    return wrap(cls)
-           ^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/dataclasses.py", line 1265, in wrap
-    return _process_class(cls, init, repr, eq, order, unsafe_hash,
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/dataclasses.py", line 983, in _process_class
-    and _is_type(type, cls, dataclasses, dataclasses.KW_ONLY,
-        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/dataclasses.py", line 749, in _is_type
-    ns = sys.modules.get(cls.__module__).__dict__
-         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-AttributeError: 'NoneType' object has no attribute '__dict__'. Did you mean: '__dir__'?
+2017-2026 kapsamında 13 resmî fiyat kitabı ve 2 resmî kod değişiklik belgesi işlenecek.
+[1/13] 2024: 0 satır (mechanical_section_not_found)
+[2/13] 2026: 0 satır (mechanical_section_not_found)
+[3/13] 2025: 0 satır (mechanical_section_not_found)
+[4/13] 2023/2: 0 satır (mechanical_section_not_found)
+[5/13] 2023/1: 0 satır (mechanical_section_not_found)
+[6/13] 2022/3: 0 satır (mechanical_section_not_found)
+[7/13] 2022/2: 0 satır (mechanical_section_not_found)
+[8/13] 2022/1: 0 satır (mechanical_section_not_found)
+[9/13] 2021: 0 satır (mechanical_section_not_found)
+[10/13] 2020: 0 satır (mechanical_section_not_found)
+[11/13] 2018: 0 satır (mechanical_section_not_found)
+[12/13] 2019: 0 satır (mechanical_section_not_found)
+[13/13] 2017: 0 satır (mechanical_section_not_found)
+Kod eşleştirme 2025: 18 satır (ok)
+Kod eşleştirme 2026: 98 satır (ok)
+{"generated_at": "2026-07-13T07:07:49.577591+00:00", "official_index_url": "https://yfk.csb.gov.tr/birim-fiyatlar-i-100468", "scope_start_year": 2017, "scope_end_year": 2026, "price_books_found": 13, "mapping_documents_found": 2, "raw_records": 0, "master_records": 0, "official_code_mappings": 116, "successful_price_books": 0, "unparsed_price_books": 13, "periods": ["2026", "2025", "2024", "2023/2", "2023/1", "2022/3", "2022/2", "2022/1", "2021", "2020", "2019", "2018", "2017"], "note": "Poz isimleri bu aşamada özellikle alınmamıştır. Eski/yeni pozlar yalnız resmî değişiklik listesi varsa birleştirilmiştir."}

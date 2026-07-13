@@ -1,0 +1,29 @@
+{
+  "generated_at": "2026-07-13T07:07:49.577591+00:00",
+  "official_index_url": "https://yfk.csb.gov.tr/birim-fiyatlar-i-100468",
+  "scope_start_year": 2017,
+  "scope_end_year": 2026,
+  "price_books_found": 13,
+  "mapping_documents_found": 2,
+  "raw_records": 0,
+  "master_records": 0,
+  "official_code_mappings": 116,
+  "successful_price_books": 0,
+  "unparsed_price_books": 13,
+  "periods": [
+    "2026",
+    "2025",
+    "2024",
+    "2023/2",
+    "2023/1",
+    "2022/3",
+    "2022/2",
+    "2022/1",
+    "2021",
+    "2020",
+    "2019",
+    "2018",
+    "2017"
+  ],
+  "note": "Poz isimleri bu aşamada özellikle alınmamıştır. Eski/yeni pozlar yalnız resmî değişiklik listesi varsa birleştirilmiştir."
+}
