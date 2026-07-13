@@ -1,7 +1,7 @@
 (() => {
   'use strict';
 
-  const VERSION = '20260712-29';
+  const VERSION = '20260713-30';
   const LOCAL_CACHE_KEY = 'BYSAY_LEGACY_POZ_CACHE_V1';
   const INDEX_URL = `data/construction-cost-index.json?v=${VERSION}`;
   const STATIC_CACHE_URL = `data/legacy-poz-cache.json?v=${VERSION}`;
@@ -83,6 +83,11 @@
     return 'ÖZL';
   };
 
+  const sourceLabelOf = raw => {
+    const label = String(raw.lookupSource || raw.sourceTitle || raw.sourceDomain || raw.source || 'İnternet kaynağı').trim();
+    return label.replace(/^www\./i,'') || 'İnternet kaynağı';
+  };
+
   const makeRecord = raw => {
     const poz = normalizePoz(raw.poz || raw.code);
     const year = Number(raw.year || raw.lastYear || raw.originalYear);
@@ -91,17 +96,19 @@
     if (!poz || !calculation) return null;
     const targetPeriod = `${calculation.target.monthName || MONTHS[Number(calculation.target.month)-1] || ''} ${calculation.target.year}`.trim();
     const sourcePeriod = `${calculation.source.monthName || MONTHS[month-1] || 'Ocak'} ${year}`;
+    const sourceLabel = sourceLabelOf(raw);
     return {
       poz,
-      tanim:String(raw.tanim || raw.description || 'BirimFiyat.Net geçmiş yıl pozu').trim(),
+      tanim:String(raw.tanim || raw.description || 'İnternetten bulunan geçmiş yıl pozu').trim(),
       birim:String(raw.birim || raw.unit || '').trim(),
       fiyat:formatPrice(calculation.updatedPrice),
       montaj:String(raw.montaj || '').trim(),
       disiplin:disciplineOf(poz),
       kitap:disciplineOf(poz),
-      kitapKaynak:`BirimFiyat.Net ${year} · TÜİK İME ile güncellendi`,
-      kaynak:`BirimFiyat.Net ${year} fiyatı / TÜİK İnşaat Maliyet Endeksi`,
+      kitapKaynak:`${sourceLabel} · Son yayın ${year} · TÜİK İME ile güncellendi`,
+      kaynak:`${sourceLabel} ${year} fiyatı / TÜİK İnşaat Maliyet Endeksi`,
       legacyUpdate:true,
+      onlineLookup:true,
       originalYear:year,
       originalMonth:month,
       originalPrice:calculation.originalPrice,
@@ -110,7 +117,18 @@
       targetIndex:calculation.target.index,
       sourcePeriod,
       targetPeriod,
-      lookupSource:String(raw.lookupSource || raw.source || 'BirimFiyat.Net'),
+      lookupSource:sourceLabel,
+      sourceUrl:String(raw.sourceUrl || '').trim(),
+      sourceDomain:String(raw.sourceDomain || '').trim(),
+      sourceTitle:String(raw.sourceTitle || '').trim(),
+      sourceCount:Number(raw.sourceCount || 1),
+      confidence:Number(raw.confidence || 0),
+      conflict:Boolean(raw.conflict),
+      evidence:String(raw.evidence || '').trim(),
+      lookupMode:String(raw.mode || raw.lookupMode || '').trim(),
+      checkedUrls:Number(raw.checkedUrls || 0),
+      alternatives:Array.isArray(raw.alternatives) ? raw.alternatives : [],
+      verifiedAt:String(raw.verifiedAt || new Date().toISOString()),
       updatedAt:new Date().toISOString()
     };
   };
@@ -146,6 +164,17 @@
       month:record.originalMonth,
       price:record.originalPrice,
       lookupSource:record.lookupSource,
+      sourceUrl:record.sourceUrl,
+      sourceDomain:record.sourceDomain,
+      sourceTitle:record.sourceTitle,
+      sourceCount:record.sourceCount,
+      confidence:record.confidence,
+      conflict:record.conflict,
+      evidence:record.evidence,
+      lookupMode:record.lookupMode,
+      checkedUrls:record.checkedUrls,
+      alternatives:record.alternatives,
+      verifiedAt:record.verifiedAt,
       savedAt:new Date().toISOString()
     });
     writeLocal(next);
