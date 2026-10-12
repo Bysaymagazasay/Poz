@@ -5,12 +5,12 @@
   "officialSource": "Türkiye İstatistik Kurumu (TÜİK)",
   "mirrorSource": "https://www.hakedis.org/endeksler/insaat-maliyet-endeksi-ve-degisim-orani",
   "sourceNote": "Hakediş.org tablosu verilerin güncel olarak TÜİK sitesinden alındığını belirtir.",
-  "updatedAt": "2026-10-11T10:51:21.424881+00:00",
+  "updatedAt": "2026-10-12T12:04:24.527263+00:00",
   "latest": {
     "year": 2026,
-    "month": 7,
-    "monthName": "Temmuz",
-    "index": 2451.41
+    "month": 8,
+    "monthName": "Ağustos",
+    "index": 2501.4
   },
   "years": {
     "2015": [
@@ -730,6 +730,11 @@
         "month": 7,
         "monthName": "Temmuz",
         "index": 2451.41
+      },
+      {
+        "month": 8,
+        "monthName": "Ağustos",
+        "index": 2501.4
       }
     ]
   }
