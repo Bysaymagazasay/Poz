@@ -1,0 +1,40 @@
+name: Elektrik Poz Tanimlari
+on:
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+concurrency:
+  group: electric-pr-crawl
+  cancel-in-progress: true
+jobs:
+  crawl:
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install requests beautifulsoup4
+      - name: Kod listesini kontrol et
+        run: |
+          python - <<'PY'
+          import base64,gzip,json
+          s=open('tools/electric_codes.b64').read().strip()
+          codes=json.loads(gzip.decompress(base64.b64decode(s)).decode())
+          print('B64',len(s),'KOD',len(codes),codes[0],codes[-1])
+          PY
+      - name: Elektrik poz tanımlarını sorgula
+        shell: bash
+        run: |
+          set -o pipefail
+          python tools/crawl_electric_descriptions.py 2>&1 | tee electric-crawl.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: electric-birimfiyat-results
+          path: |
+            electric_birimfiyat_results.json
+            electric_birimfiyat_results.csv
+            electric_birimfiyat_progress.json
+            electric-crawl.log
